@@ -1,0 +1,13 @@
+[Unit]
+Description=Arkbot Dashboard
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/arkserver/Arkbot/dashboard.py
+Restart=on-failure
+RestartSec=3
+User=arkserver
+Group=arkserver
+
+[Install]
+WantedBy=multi-user.target
