@@ -123,3 +123,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+.idea
+config.yaml
+*.db
+*.log
+gamelog.txt
+chatlog.txt
+*.lock
+test.py

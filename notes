@@ -1,0 +1,28 @@
+@Nix
+
+I try to make this as clear as possible.
+I also had this idea some years back. I didnt finished it, but anyway, I will pass on my knowledge to you:
+
+https://partner.steamgames.com/doc/webapi_overview
+https://partner.steamgames.com/doc/webapi/ISteamWebAPIUtil
+https://partner.steamgames.com/doc/webapi/ISteamUser
+https://steamwebapi.azurewebsites.net/
+
+Those are very important links to get anything you ever need.
+
+So, lets get started
+(I made this originally for gmod, but you just need to change the appid)
+
+https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?appid=4000&version=140419
+We use UpToDateCheck, because then we just simply need to check if our current game version (140419) is up to date or not
+If everything is allright, then we get true in return
+
+If our installed version is different
+https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/?appid=4000&version=140418
+Then we get other responses
+If anything is unclear, just ask
+I try my best to help you / get you back on track
+
+
+
+https://github.com/Ekagrah/Linux-Ark-Dedicated-Server

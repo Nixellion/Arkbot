@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="card-header bg-primary text-light">
+                <h4>Game log</h4>
+            </div>
+            <div class="card-body">
+                {{GetData.dashlog|html_line_breaks|safe}}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}

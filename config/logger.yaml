@@ -1,0 +1,40 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+    simple:
+        format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: simple
+        stream: ext://sys.stdout
+
+    debug_file_handler:
+        class: logging.handlers.RotatingFileHandler
+        level: DEBUG
+        formatter: simple
+        filename: dashboard.log
+        maxBytes: 1000000 # 1MB
+        backupCount: 5
+        encoding: utf8
+
+
+root:
+    level: ERROR
+    handlers: [debug_file_handler]
+
+loggers:
+  "ark_manager":
+    level: DEBUG
+    handlers: [debug_file_handler]
+  "ark_discord_bot":
+      level: DEBUG
+      handlers: [debug_file_handler]
+  "ark_dashboard":
+      level: DEBUG
+      handlers: [debug_file_handler]
+  "ark_updater":
+      level: DEBUG
+      handlers: [debug_file_handler]

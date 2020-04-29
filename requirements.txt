@@ -1,0 +1,12 @@
+python-valve
+pyyaml
+mcrcon
+requests
+paramiko
+scp
+discord-webhook
+timeago
+flask
+eventlet
+flask-socketio
+patreon

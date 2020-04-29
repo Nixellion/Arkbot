@@ -1,0 +1,6 @@
+name: "TheIsland"
+ip: "192.168.1.10"
+rcon_port: 27020
+password: password
+chat_name: Arkbot
+discord_webhook: "https://discordapp.com/api/webhooks/XXX/token"

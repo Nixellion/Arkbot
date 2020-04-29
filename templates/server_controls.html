@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% set players = GetData.players %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+          <h5 class="card-header">Arkbot Commands</h5>
+          <div class="card-body">
+              {% for action in [["restart", "Restart"], ["restart", "Update"], ["reboot_host", "Reboot Host"], ["force_update_mods", "Force Update Mods"]] %}
+              <form action="/api/arkbot_actions/" method="post">
+              <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Message, Reason for action" aria-label="Message, Reason for action" aria-describedby="button-addon1" name="message">
+                  <input name="action" type="hidden" value="{{action[0]}}">
+                  <div class="input-group-append">
+                    <input type="submit" class="btn btn-primary" type="button" id="button-addon1" value="{{action[1]}}" style="width:200px;">
+                  </div>
+                </div>
+              </form>
+              {% endfor %}
+          </div>
+        </div>
+        <div class="card">
+          <h5 class="card-header">LinuxGSM Commands</h5>
+          <div class="card-body">
+              {% for action in [["update", "Update"], ["force-update", "Force Update"], ["stop", "Stop"], ["start", "Start"], ["restart", "Restart"], ["details", "Details"]] %}
+              <form action="/api/linuxgsm_actions/" method="post">
+              <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Message, Reason for action" aria-label="Message, Reason for action" aria-describedby="button-addon2" name="message">
+                  <input name="action" type="hidden" value="{{action[0]}}">
+                  <div class="input-group-append">
+                    <input type="submit" class="btn btn-danger" type="button" id="button-addon2" value="{{action[1]}}" style="width:200px;">
+                  </div>
+                </div>
+              </form>
+              {% endfor %}
+          </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+</script>
+{% endblock %}

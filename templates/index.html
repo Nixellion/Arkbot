@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% set players = GetData.players %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-light">
+                <h4>Players ({{players|length}})</h4>
+            </div>
+            <div class="card-body overflow-auto vh70">
+                <ul class="list-group list-group-flush">
+                    {% for player in players %}
+                    <li class="list-group-item">
+                        {{player.id}}. {{player.name}} [{{player.steam_id}}]
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-light">
+                <h4>Chat</h4>
+            </div>
+            <div class="card-body overflow-auto vh70" id="chatlog">
+                {% for message in GetData.get_chat_log() %}
+                <b>[{{message.time}}] {{message.player}} ({{message.player_tribe}}):</b> {{message.message}}<br>
+                {% endfor %}
+            </div>
+            <div class="card-body">
+                <hr>
+                <form action="/api/serverchat" method="POST">
+                  <div class="form-group">
+                    <label for="message">Enter message</label>
+                    <input type="text" class="form-control" id="message" name="message">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+<script>
+function GetJSON(yourUrl){
+    var Httpreq = new XMLHttpRequest(); // a new request
+    Httpreq.open("GET",yourUrl,false);
+    Httpreq.send(null);
+    return JSON.parse(Httpreq.responseText);
+}
+
+</script>
+{% endblock %}

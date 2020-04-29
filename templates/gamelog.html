@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="card-header bg-primary text-light">
+                <h4>Game log</h4>
+            </div>
+            <div class="card-body">
+                {% for message in GetData.get_game_log(limit) %}
+                <b>[{{GetData.log_id_text(message.log_type)}}]:</b> {{message.raw}}<br>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{% endblock %}
