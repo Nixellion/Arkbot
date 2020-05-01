@@ -16,6 +16,8 @@ from peewee import *
 from ark_manager import *
 from paths import APP_DIR
 
+from git import Repo as GitRepo
+
 from pprint import PrettyPrinter
 
 # endregion
@@ -33,6 +35,8 @@ GAME_LOG_PATH = os.path.join(APP_DIR, "gamelog.txt")
 
 
 
+gitrepo = GitRepo.init(APP_DIR)
+assert not gitrepo.bare
 
 class GetData():
     def get_chat_log(self, limit=30):
@@ -78,6 +82,12 @@ class GetData():
 
     def log_id_text(self, id):
         return log_types[id]
+
+    def check_for_update(self):
+        fetch_info = gitrepo.remotes.origin.fetch()[0]
+
+        return gitrepo.heads.master.commit != fetch_info.commit
+
 
 
 # region ############################# TABLE CLASSES #############################

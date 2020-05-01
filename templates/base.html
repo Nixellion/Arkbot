@@ -47,10 +47,13 @@
             </li>
         </ul>
     </div>
-    <div class="locks">
+    <div class="locks" id="locks">
         {% for lock in locks %}
             {% if lock.is_locked %} <a href="/api/unlock/{{lock.name}}"><i class="fas fa-lock" title="{{lock.name|title}}: {{lock.message}}" data-toggle="tooltip" data-placement="bottom"></i></a> {% endif %}
         {% endfor %}
+        <span class="spinner-grow spinner-grow-sm text-light" role="status" id="updater_loader">
+            <span class="sr-only">Loading...</span>
+        </span>
     </div>
 </nav>
 
@@ -81,6 +84,23 @@
   $('[data-toggle="tooltip"]').tooltip()
 })
 </script>
+
+<script>
+function GetJSON(yourUrl){
+    var Httpreq = new XMLHttpRequest(); // a new request
+    Httpreq.open("GET",yourUrl,false);
+    Httpreq.send(null);
+    return JSON.parse(Httpreq.responseText);
+}
+
+var update_available = GetJSON("/api/check_update");
+console.log(update_available);
+document.getElementById("updater_loader").remove();
+if (update_available.success == true) {
+        document.getElementById("locks").innerHTML += '<a href="/api/update"><i class="fas fa-exclamation-triangle text-danger" title="Update available!" data-toggle="tooltip" data-placement="bottom"></i></a>';
+}
+</script>
+
 {% block extra_scripts %}
 
 {% endblock %}

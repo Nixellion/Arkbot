@@ -10,3 +10,4 @@ flask
 eventlet
 flask-socketio
 patreon
+gitpython

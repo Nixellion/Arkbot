@@ -112,3 +112,32 @@ def linuxgsm_actions():
         return Response(str(cmd_out))
     else:
         return Response("POST!!!")
+
+@app.route("/api/check_update/")
+@catch_errors
+def check_update():
+    return jsonify({"success":GetData().check_for_update()})
+
+@app.route("/api/update/")
+@catch_errors
+def update():
+    log.info("Update requested from git...")
+    return jsonify({"success":str(gitrepo.remotes.origin.pull())})
+
+
+@app.route("/api/restart/")
+@catch_errors
+def restart():
+    log.info("Update requested from git...")
+    result = ""
+    import subprocess
+    command = 'service ark_dashboard restart'
+    log.info("Running:", command)
+    try:
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        process.wait()
+        result += str(process.returncode) + "\n\n<hr>"
+    except Exception as e:
+        result += str(e)
+        log.info("Error during restart:", exc_info=True)
+    return Response({"success":str(result)})

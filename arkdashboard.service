@@ -6,8 +6,8 @@ Type=simple
 ExecStart=/usr/bin/python3 /home/arkserver/Arkbot/dashboard.py
 Restart=on-failure
 RestartSec=3
-User=arkserver
-Group=arkserver
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target

@@ -51,13 +51,5 @@
 
 {% block extra_scripts %}
 
-<script>
-function GetJSON(yourUrl){
-    var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open("GET",yourUrl,false);
-    Httpreq.send(null);
-    return JSON.parse(Httpreq.responseText);
-}
 
-</script>
 {% endblock %}
