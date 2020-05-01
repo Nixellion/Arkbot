@@ -51,6 +51,7 @@ app.jinja_env.filters['html_line_breaks'] = html_line_breaks
 def inject_global_variables():
     return dict(
         GetData=GetData(),
+        getdata=getdata,
         n_to_br=html_line_breaks,
         server=server,
         version=version

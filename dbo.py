@@ -80,6 +80,10 @@ class GetData():
     def players(self):
         return listplayers()
 
+    @property
+    def git_commit(self):
+        return gitrepo.heads.master.commit
+
     def log_id_text(self, id):
         return log_types[id]
 
@@ -88,7 +92,7 @@ class GetData():
 
         return gitrepo.heads.master.commit != fetch_info.commit
 
-
+getdata = GetData()
 
 # region ############################# TABLE CLASSES #############################
 class BroModel(Model):
