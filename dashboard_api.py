@@ -116,28 +116,25 @@ def linuxgsm_actions():
 @app.route("/api/check_update/")
 @catch_errors
 def check_update():
-    return jsonify({"success":GetData().check_for_update()})
+    return jsonify({"success":getdata.check_for_update()})
 
 @app.route("/api/update/")
 @catch_errors
 def update():
     log.info("Update requested from git...")
-    return jsonify({"success":str(gitrepo.remotes.origin.pull())})
-
+    gitrepo.remotes.origin.pull()
+    return redirect("/restart")
 
 @app.route("/api/restart/")
 @catch_errors
 def restart():
-    log.info("Update requested from git...")
+    log.info("Restarting...")
     result = ""
     import subprocess
     command = 'service ark_dashboard restart'
     log.info("Running:", command)
-    try:
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-        process.wait()
-        result += str(process.returncode) + "\n\n<hr>"
-    except Exception as e:
-        result += str(e)
-        log.info("Error during restart:", exc_info=True)
-    return Response({"success":str(result)})
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    process.wait()
+    result += str(process.returncode) + "\n\n<hr>"
+    log.info(result)
+    return redirect("/")
