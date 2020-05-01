@@ -123,7 +123,7 @@ def check_update():
 def update():
     log.info("Update requested from git...")
     gitrepo.remotes.origin.pull()
-    return redirect("/restart")
+    return redirect("/api/restart")
 
 @app.route("/api/restart/")
 @catch_errors
@@ -131,7 +131,7 @@ def restart():
     log.info("Restarting...")
     result = ""
     import subprocess
-    command = 'service ark_dashboard restart'
+    command = 'service arkdashboard restart'
     log.info("Running:", command)
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
     process.wait()
