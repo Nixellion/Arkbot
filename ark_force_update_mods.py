@@ -34,7 +34,9 @@ print ("Starting...")
 log.info("Admin initialized force update mods.")
 
 stop_server()
-update_mods(get_active_mods())
+active_mods = get_active_mods()
+log.info(f"Updating mods: {active_mods}")
+update_mods()
 start_server()
 
 
