@@ -209,8 +209,11 @@ def run_shell_command_as_user(command, user='arkserver', shell=True):
     else:
         cmd = command
 
-    #cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
-    cmd_out = check_output(cmd)
+    try:
+        cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    except:
+        log.warning(f"Shell command '{cmd}' ran with errors.", exc_info=True)
+    #cmd_out = check_output(cmd)
     return str(cmd_out)
 
 
