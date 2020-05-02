@@ -2,8 +2,8 @@ from ark_manager import *
 import time
 from random import choice
 
-import logging
-from debug import setup_logging
+
+
 from locks import Lock
 
 import argparse
@@ -31,8 +31,7 @@ if prompt_sudo() != 0:
     log.warning("Can't run reboot script, need root\sudo access.")
     sys.exit()
 
-log = logging.getLogger("ark_manager")
-setup_logging()
+
 
 lock = Lock()
 if lock.is_locked:

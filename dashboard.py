@@ -18,14 +18,6 @@ from jinja_filters import html_line_breaks
 from configuration import version
 
 
-# region Logger
-import logging
-from debug import setup_logging
-
-log = logger = logging.getLogger("ark_dashboard")
-setup_logging()
-# endregion
-
 
 realPath = os.path.dirname(os.path.realpath(__file__))
 rp = realPath

@@ -8,13 +8,8 @@ for whatever you can think of.
 import os
 from paths import APP_DIR
 
-# region Logger
-import logging
-from debug import setup_logging
-
-log = logger = logging.getLogger("ark_dashboard")
-setup_logging()
-# endregion
+from debug import get_logger
+log = get_logger("arkbot")
 
 class Lock(object):
     def __init__(self, name="general"):

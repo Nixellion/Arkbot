@@ -9,15 +9,18 @@ import functools
 
 basedir = os.path.dirname(os.path.realpath(__file__))
 
+
+
 def setup_logging(
     default_path=os.path.join(basedir, 'config', 'logger.yaml'),
     default_level=logging.INFO,
     env_key='LOG_CFG',
-     logname=None
+    logname=None
 ):
     """Setup logging configuration
 
     """
+
     path = default_path
     value = os.getenv(env_key, None)
     if value:
@@ -46,3 +49,15 @@ def catch_errors_json(f):
     return wrapped
 
 
+loggers = {}
+
+def get_logger(name):
+    global loggers
+
+    if loggers.get(name):
+        return loggers.get(name)
+    else:
+        logger = logging.getLogger(name)
+        loggers[name] = logger
+
+        return logger

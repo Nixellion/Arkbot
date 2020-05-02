@@ -18,12 +18,8 @@ from moddodo import ModDodo
 
 rp = realpath = os.path.dirname(os.path.realpath(__file__))
 
-import logging
-from debug import setup_logging
-
-log = logging.getLogger("ark_manager")
-setup_logging()
-
+from debug import get_logger
+log = get_logger("arkbot")
 
 random_funny_bits = [
     "Time to find shelter!",

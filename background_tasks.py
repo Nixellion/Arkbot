@@ -6,13 +6,7 @@ from gamechat_commands import parse_chat
 from dbo import *
 import functools
 
-# region Logger
-import logging
-from debug import setup_logging
 
-log = logger = logging.getLogger("ark_dashboard")
-setup_logging()
-# endregion
 
 def catch_errors(f):
     @functools.wraps(f)

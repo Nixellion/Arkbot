@@ -6,12 +6,6 @@ from ark_manager import *
 
 from locks import Lock
 
-import logging
-from debug import setup_logging
-
-log = logging.getLogger("ark_manager")
-setup_logging()
-
 import argparse
 parser = argparse.ArgumentParser(description='Restart ark server.')
 parser.add_argument("--message", dest='message', default=None, help="Message to add to broadcast, usually reason for restart.")

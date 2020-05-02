@@ -3,13 +3,7 @@ from debug import catch_errors_json
 from locks import get_locks
 from dbo import *
 
-# region Logger
-import logging
-from debug import setup_logging
 
-log = logger = logging.getLogger("ark_dashboard")
-setup_logging()
-# endregion
 
 app = Blueprint("dashboard_views", __name__)
 

@@ -29,6 +29,9 @@ loggers:
   "ark_manager":
     level: DEBUG
     handlers: [debug_file_handler]
+  "arkbot":
+    level: DEBUG
+    handlers: [debug_file_handler]
   "ark_discord_bot":
       level: DEBUG
       handlers: [debug_file_handler]

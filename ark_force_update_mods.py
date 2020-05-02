@@ -7,11 +7,8 @@ import os, shutil
 
 from locks import Lock
 
-import logging
-from debug import setup_logging
-
-log = logging.getLogger("ark_manager")
-setup_logging()
+from debug import get_logger
+log = get_logger("arkbot")
 
 import argparse
 parser = argparse.ArgumentParser(description='Restart ark server.')

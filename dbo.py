@@ -2,11 +2,7 @@
 # endregion
 # region ############################# IMPORTS #############################
 
-import logging
-from debug import setup_logging
 
-log = logging.getLogger("ark_dashboard")
-setup_logging()
 
 import os
 import traceback
