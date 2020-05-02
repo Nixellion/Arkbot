@@ -210,11 +210,11 @@ def run_shell_command_as_user(command, user='arkserver', shell=True):
         cmd = command
     cmd = command + " &"
     try:
-        cmd_out = os.system(cmd)#subprocess.check_output(cmd, shell=True).decode("utf-8")
+        cmd_out = subprocess.check_call(cmd, shell=True).decode("utf-8") #os.system(cmd)
         log.debug(f"Command '{cmd}' exit code: {cmd_out}")
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         log.warning(f"Shell command '{cmd}' ran with errors.", exc_info=True)
-        cmd_out = str(e)
+        cmd_out = str(e.message)
     #cmd_out = check_output(cmd)
     return str(cmd_out)
 
