@@ -142,7 +142,7 @@ def check_version():
     ## See if update is available
     ## should return a byte object as b'\t\t"branches"\n\t\t{\n\t\t\t"public"\n\t\t\t{\n\t\t\t\t"buildid"\t\t"3129691"\n'
     steamcmd = """/home/arkserver/steamcmd/steamcmd.sh +login anonymous +app_info_update 1 +app_info_print 376030 +quit | sed -n '/"branches"/,/"buildid"/p' """
-    steam_out = run_shell_command_as_user(steamcmd, shell=True)
+    steam_out = run_shell_command_as_user(steamcmd)
     new_vers = pattern.search(steam_out).group()
 
     with open("/home/arkserver/serverfiles/steamapps/appmanifest_376030.acf") as inFile:
@@ -158,7 +158,7 @@ def check_version():
         return False
 
 
-def run_shell_command_as_user(command, user='arkserver'):
+def run_shell_command_as_user(command, user='arkserver', shell=True):
     log.debug(f"Running shell command: {command}; as user {user}")
     if user != 'root':
         cmd = f"""su - {user} -c '{command}'"""
