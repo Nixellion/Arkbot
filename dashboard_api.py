@@ -97,7 +97,7 @@ def unlock(name):
 @catch_errors
 def arkbot_actions():
     if request.method == "POST":
-        cmd = f"""su - arkserver -c 'python3 /home/arkserver/Arkbot/ark_{request.form["action"]}.py --message "{request.form["message"]}"'"""
+        cmd = f'''python3 /home/arkserver/Arkbot/ark_{request.form["action"]}.py --message "{request.form["message"]}"'''
         cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
         log.info(str(cmd_out))
         return Response(str(cmd_out))
@@ -106,7 +106,7 @@ def arkbot_actions():
 @catch_errors
 def linuxgsm_actions():
     if request.method == "POST":
-        cmd = f"""su - arkserver -c '/home/arkserver/arkserver {request.form["action"]}'"""
+        cmd = f"""python3 /home/arkserver/arkserver {request.form["action"]}"""
         cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
         log.info(str(cmd_out))
         return Response(str(cmd_out))
