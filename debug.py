@@ -59,5 +59,5 @@ def get_logger(name):
     else:
         logger = logging.getLogger(name)
         loggers[name] = logger
-
+        setup_logging()
         return logger
