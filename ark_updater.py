@@ -29,6 +29,7 @@ if lock.locked:
     sys.exit()
 
 if check_version():
+    print ("Update found!")
     log.info("New version found, performing update.")
     lock.lock("Locked for update...")
     broadcast(f"Update detected. Server will restart in 30 minutes. {choice(random_funny_bits)}", True)
@@ -45,3 +46,4 @@ if check_version():
     lock.unlock()
 else:
     log.info("No new versions found.")
+    print ("No new versions.")
