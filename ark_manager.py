@@ -167,7 +167,7 @@ def get_active_mods():
     mods_list = None
     for line in user_settings:
         if line.startswith("ActiveMods"):
-            mods_list = line.partition[2].split(",")
+            mods_list = line.partition()[2].split(",")
             break
     if not mods_list:
         return None
