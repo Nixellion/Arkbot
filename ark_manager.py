@@ -208,7 +208,7 @@ def run_shell_command_as_user(command, user='arkserver', shell=True):
         cmd = f"""su - {user} -c '{command}'"""
     else:
         cmd = command
-
+    cmd = command + " &"
     try:
         cmd_out = os.system(cmd)#subprocess.check_output(cmd, shell=True).decode("utf-8")
         log.debug(f"Command '{cmd}' exit code: {cmd_out}")
