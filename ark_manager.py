@@ -194,10 +194,12 @@ def update_mods(mod_ids):
         return False
 
 def check_output(cmd):
+    log.debug(f"Running shell command raw: {cmd}")
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
     output = process.communicate()[0]
     if process.returncode != 0:
         log.warning(f"Command '{cmd}' exited with non standard exit code: {process.returncode}")
+    log.debug(f"Command '{cmd}' output: {process.returncode}; {output}")
     return output
 
 def run_shell_command_as_user(command, user='arkserver', shell=True):
