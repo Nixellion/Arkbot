@@ -210,7 +210,8 @@ def run_shell_command_as_user(command, user='arkserver', shell=True):
         cmd = command
 
     try:
-        cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
+        cmd_out = os.system(cmd)#subprocess.check_output(cmd, shell=True).decode("utf-8")
+        log.debug(f"Command '{cmd}' exit code: {cmd_out}")
     except Exception as e:
         log.warning(f"Shell command '{cmd}' ran with errors.", exc_info=True)
         cmd_out = str(e)
@@ -232,19 +233,19 @@ def restart_server():
     log.info(str(cmd_out))
 
 def stop_server():
-    log.info("Restarting...")
+    log.info("Stopping...")
     steamcmd = """/home/arkserver/arkserver stop"""
     cmd_out = run_shell_command_as_user(steamcmd)
     log.info(str(cmd_out))
 
 def start_server():
-    log.info("Restarting...")
+    log.info("Starting...")
     steamcmd = """/home/arkserver/arkserver start"""
     cmd_out = run_shell_command_as_user(steamcmd)
     log.info(str(cmd_out))
 
 def reboot_server():
-    log.info("Restarting...")
+    log.info("Rebooting...")
     steamcmd = """reboot now"""
     cmd_out = run_shell_command_as_user(steamcmd, user='root')
     log.info(str(cmd_out))
