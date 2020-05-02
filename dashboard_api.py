@@ -98,7 +98,7 @@ def unlock(name):
 def arkbot_actions():
     if request.method == "POST":
         cmd = f'''python3 /home/arkserver/Arkbot/ark_{request.form["action"]}.py --message "{request.form["message"]}"'''
-        cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
+        cmd_out = run_shell_command_as_user(cmd, user='root')
         log.info(str(cmd_out))
         return Response(str(cmd_out))
 
@@ -107,7 +107,7 @@ def arkbot_actions():
 def linuxgsm_actions():
     if request.method == "POST":
         cmd = f"""python3 /home/arkserver/arkserver {request.form["action"]}"""
-        cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
+        cmd_out = run_shell_command_as_user(cmd, user='root')
         log.info(str(cmd_out))
         return Response(str(cmd_out))
     else:
