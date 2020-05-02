@@ -207,6 +207,9 @@ def fix_mods_permissions():
         log.error("Unable to fix mod permissions.", exc_info=True)
         return False
 
+def force_copy_mods():
+    run_shell_command_as_user(f"cp -r {STEAM_MODS_DIR} {ARK_MODS_DIR}")
+
 def check_output(cmd):
     log.debug(f"Running shell command raw: {cmd}")
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
