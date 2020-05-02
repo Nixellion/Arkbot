@@ -93,12 +93,14 @@ function GetJSON(yourUrl){
     return JSON.parse(Httpreq.responseText);
 }
 
-var update_available = GetJSON("/api/check_update");
-console.log(update_available);
-document.getElementById("updater_loader").remove();
-if (update_available.success == true) {
-        document.getElementById("locks").innerHTML += '<a href="/api/update"><i class="fas fa-exclamation-triangle text-danger" title="Update available!" data-toggle="tooltip" data-placement="bottom"></i></a>';
-}
+$(document).ready(function() {
+    var update_available = GetJSON("/api/check_update");
+    console.log(update_available);
+    document.getElementById("updater_loader").remove();
+    if (update_available.success == true) {
+            document.getElementById("locks").innerHTML += '<a href="/api/update"><i class="fas fa-exclamation-triangle text-danger" title="Update available!" data-toggle="tooltip" data-placement="bottom"></i></a>';
+    }
+});
 </script>
 
 {% block extra_scripts %}

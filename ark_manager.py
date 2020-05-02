@@ -193,7 +193,12 @@ def update_mods(mod_ids):
         log.error("Unable to update mods.", exc_info=True)
         return False
 
-
+def check_output(cmd):
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    output = process.communicate()[0]
+    if process.returncode != 0:
+        log.warning(f"Command '{cmd}' exited with non standard exit code: {process.returncode}")
+    return output
 
 def run_shell_command_as_user(command, user='arkserver', shell=True):
     log.debug(f"Running shell command: {command}; as user {user}")
@@ -202,8 +207,9 @@ def run_shell_command_as_user(command, user='arkserver', shell=True):
     else:
         cmd = command
 
-    cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
-    return cmd_out
+    #cmd_out = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    cmd_out = check_output(cmd)
+    return str(cmd_out)
 
 
 def update_server():
