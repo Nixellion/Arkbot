@@ -14,6 +14,7 @@ from discord_webhook import DiscordWebhook
 
 from mcrcon import MCRcon
 
+
 from moddodo import ModDodo
 
 rp = realpath = os.path.dirname(os.path.realpath(__file__))
@@ -79,6 +80,9 @@ def rcon_command(command):
             return None
 
         return resp
+    except ConnectionRefusedError:
+        log.warning("Unable to connect to RCON, is server down?")
+
     except Exception as e:
         lock.lock(str(e))
         log.error(str(e), exc_info=True)
