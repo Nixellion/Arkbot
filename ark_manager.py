@@ -4,6 +4,8 @@ import requests
 import sys
 import subprocess
 import re
+
+from paths import *
 from configuration import server
 
 from locks import Lock
@@ -11,6 +13,8 @@ from locks import Lock
 from discord_webhook import DiscordWebhook
 
 from mcrcon import MCRcon
+
+from moddodo import ModDodo
 
 rp = realpath = os.path.dirname(os.path.realpath(__file__))
 
@@ -141,7 +145,7 @@ def check_version():
     pattern = re.compile(r"[0-9]{7,}")
     ## See if update is available
     ## should return a byte object as b'\t\t"branches"\n\t\t{\n\t\t\t"public"\n\t\t\t{\n\t\t\t\t"buildid"\t\t"3129691"\n'
-    steamcmd = """/home/arkserver/steamcmd/steamcmd.sh +login anonymous +app_info_update 1 +app_info_print 376030 +quit | sed -n '/"branches"/,/"buildid"/p' """
+    steamcmd = f"""{STEAMCMD} +login anonymous +app_info_update 1 +app_info_print 376030 +quit | sed -n '/"branches"/,/"buildid"/p' """
     steam_out = run_shell_command_as_user(steamcmd)
     new_vers = pattern.search(steam_out).group()
 
@@ -156,6 +160,39 @@ def check_version():
     elif int(new_vers) == int(curr_vers):
         log.info("Server reports up-to-date")
         return False
+
+def get_active_mods():
+    with open(GAMEUSERSETTINGS, "r", encoding="utf8") as f:
+        user_settings = f.readlines()
+    mods_list = None
+    for line in user_settings:
+        if line.startswith("ActiveMods"):
+            mods_list = line.partition[2].split(",")
+            break
+    if not mods_list:
+        return None
+    else:
+        return mods_list
+
+def check_mod_versions():
+    log.info ("Checking for mod updates...")
+
+
+    return None # Return mod IDs that needs to be updated or None if none
+
+
+def update_mods(mod_ids):
+    try:
+        ModDodo(os.path.dirname(STEAMCMD),
+                mod_ids,
+                ARK_SERVER_DIR,
+                True,
+                False)
+        return True
+    except:
+        log.error("Unable to update mods.", exc_info=True)
+        return False
+
 
 
 def run_shell_command_as_user(command, user='arkserver', shell=True):

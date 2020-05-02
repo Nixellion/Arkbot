@@ -1,9 +1,6 @@
 import time
 from random import choice
 from ark_manager import *
-from paths import ARK_MODS_DIR
-import os, shutil
-
 
 from locks import Lock
 
@@ -26,18 +23,9 @@ if args.message:
         args.message = args.message + " "
 
 lock = Lock()
+
 if lock.locked:
     log.debug("Another script already running, exit...")
     sys.exit()
 
-print ("Starting...")
-log.info("Admin initialized force update mods.")
 
-stop_server()
-update_mods(get_active_mods())
-start_server()
-
-
-print ("Remove lock...")
-lock.unlock()
-broadcast(f"Server was restarted to force update mods. Should be back up in a few minutes. {args.message}{choice(random_funny_bits)}", False)

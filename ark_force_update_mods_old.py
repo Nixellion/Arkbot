@@ -33,11 +33,21 @@ if lock.locked:
 print ("Starting...")
 log.info("Admin initialized force update mods.")
 
+# rm -rf /home/arkserver/serverfiles/ShooterGame/Content/Mods && mkdir /home/arkserver/serverfiles/ShooterGame/Content/Mods
+# \\192.168.1.185\root\home\arkserver\.local\share\Steam\steamapps\workshop\content\346110
+
 stop_server()
-update_mods(get_active_mods())
-start_server()
+for file in os.listdir(ARK_MODS_DIR):
+    filepath = os.path.join(ARK_MODS_DIR, file)
+    try:
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+        elif os.path.isdir(filepath):
+            shutil.rmtree(filepath)
+    except Exception as e:
+        log.error(f"Could not remove {filepath}", exc_info=True)
 
 
 print ("Remove lock...")
 lock.unlock()
-broadcast(f"Server was restarted to force update mods. Should be back up in a few minutes. {args.message}{choice(random_funny_bits)}", False)
+broadcast(f"Server was restarted to force update mods. Should be back up in a few minutes as it redownloads mods and starts up. {args.message}{choice(random_funny_bits)}", False)
