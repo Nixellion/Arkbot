@@ -27,6 +27,8 @@ if lock.locked:
     log.debug("Another script already running, exit...")
     sys.exit()
 
+lock.lock("Force mods update.")
+
 print ("Starting...")
 log.info("Admin initialized force update mods.")
 
@@ -37,7 +39,7 @@ update_mods(active_mods)
 fix_mods_permissions()
 start_server()
 
-
+run_shell_command_as_user("service arkdashboard restart", user="root")
 print ("Remove lock...")
 lock.unlock()
 broadcast(f"Server was restarted to force update mods. Should be back up in a few minutes. {args.message}{choice(random_funny_bits)}", False)

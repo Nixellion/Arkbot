@@ -99,7 +99,7 @@ def arkbot_actions():
     if request.method == "POST":
         cmd = f'''python3 /home/arkserver/Arkbot/ark_{request.form["action"]}.py --message "{request.form["message"]}"'''
         cmd_out = run_shell_command_as_user(cmd, user='root')
-        log.info(str(cmd_out))
+        log.info(f"Arkbot  action finished: {cmd_out}")
         return Response(str(cmd_out))
 
 @app.route("/api/linuxgsm_actions/", methods=["GET", "POST"])
@@ -129,12 +129,7 @@ def update():
 @catch_errors
 def restart():
     log.info("Restarting...")
-    result = ""
-    import subprocess
-    command = 'service arkdashboard restart'
-    log.info("Running:", command)
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-    process.wait()
-    result += str(process.returncode) + "\n\n<hr>"
-    log.info(result)
+
+    run_shell_command_as_user("service arkdashboard restart", user="root")
+
     return redirect("/")

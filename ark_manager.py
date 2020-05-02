@@ -181,10 +181,14 @@ def check_mod_versions():
     return None # Return mod IDs that needs to be updated or None if none
 
 
+def remove_and_restore(path):
+    run_shell_command_as_user(f"rm -rf {path}", user='root')
+    run_shell_command_as_user(f"mkdir {path}")
+
 def update_mods(mod_ids):
     try:
-        run_shell_command_as_user(f"rm -rf {ARK_MODS_DIR}", user='root')
-        run_shell_command_as_user(f"mkdir {ARK_MODS_DIR}")
+        remove_and_restore(ARK_MODS_DIR)
+        remove_and_restore(STEAM_MODS_DIR)
         ModDodo(os.path.dirname(STEAMCMD),
                 mod_ids,
                 ARK_SERVER_DIR,
