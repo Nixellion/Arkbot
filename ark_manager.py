@@ -191,6 +191,14 @@ def update_mods(mod_ids):
         log.error("Unable to update mods.", exc_info=True)
         return False
 
+def fix_mods_permissions():
+    try:
+        run_shell_command_as_user(f"chown -R arkserver:arkserver {ARK_MODS_DIR}", user='root')
+        return True
+    except:
+        log.error("Unable to fix mod permissions.", exc_info=True)
+        return False
+
 def check_output(cmd):
     log.debug(f"Running shell command raw: {cmd}")
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
