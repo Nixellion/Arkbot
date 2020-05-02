@@ -16,7 +16,7 @@ handlers:
         level: DEBUG
         formatter: simple
         filename: dashboard.log
-        maxBytes: 1000000 # 1MB
+        maxBytes: 500000 # 0.5MB
         backupCount: 5
         encoding: utf8
 
