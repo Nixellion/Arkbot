@@ -12,7 +12,7 @@ from collections import OrderedDict
 import struct
 
 from debug import get_logger
-log = get_logger("arkbot")
+log = get_logger("moddodo")
 
 SERVER_MOD_DIRECTORY = "ShooterGame/Content/Mods"
 
@@ -41,7 +41,7 @@ class ModDodo:
         if mod_update:
             self.append_installed_mods(modids)
 
-        log.debug("Installing mods: " + ', '.join(modids))
+        log.info("Installing mods: " + ', '.join(modids))
 
         # Mod/.z/UE magic stuff
         self.map_names = []  # stores map names from mod.info
@@ -57,13 +57,15 @@ class ModDodo:
             sys.exit(1)
 
         # SteamCMD does not properly break lines
-        log.debug("")
+        print("")
+
+        log.debug(" ;\n".join("ModDodo starting up:", self.steamcmd_directory, self.server_directory, self.download_mod_directory, SERVER_MOD_DIRECTORY, STEAMCMD_MODS_PATH, SERVER_CHECK_PATH, STEAMCMD_SCRIPT, WINDOWS_NOEDITOR, WINDOWS_NOEDITOR_MOD_INFO, WINDOWS_NOEDITOR_MODFILE, WINDOWS_NOEDITOR_MODMETA_INFO))
 
         for modid in modids:
             if self.extract_mod(modid):
                 if self.create_mod_file(modid):
                     if self.move_mod(modid):
-                        log.debug("Mod " + str(modid) + " successfully installed")
+                        log.info("Mod " + str(modid) + " successfully installed")
                     else:
                         print_error("Could not move mod " + str(modid))
                 else:
@@ -76,7 +78,7 @@ class ModDodo:
             print_error("Given server directory " + self.server_directory + " does not contain '" + SERVER_CHECK_PATH + "'")
             sys.exit(1)
         else:
-            log.debug("Installing mods for server: " + self.server_directory)
+            log.info("Installing mods for server: " + self.server_directory)
 
     def check_steamcmd_directory(self):
         if not os.path.isfile(os.path.join(self.steamcmd_directory, STEAMCMD_SCRIPT)):
@@ -84,7 +86,7 @@ class ModDodo:
                         + "\tSee https://developer.valvesoftware.com/wiki/SteamCMD#Linux on how to install")
             sys.exit(1)
         else:
-            log.debug("Using SteamCMD: " + self.steamcmd_directory)
+            log.info("Using SteamCMD: " + self.steamcmd_directory)
 
     def delete_steamcmd_cache(self):
         """
@@ -96,16 +98,16 @@ class ModDodo:
         steamapps = os.path.join(os.path.dirname(self.steamcmd_directory), STEAMCMD_STEAMAPPS)
 
         if os.path.isdir(steamapps):
-            log.debug("Trying to remove " + STEAMCMD_STEAMAPPS + " folder...")
+            log.info("Trying to remove " + STEAMCMD_STEAMAPPS + " folder...")
             try:
                 shutil.rmtree(steamapps)
-                log.debug("Success")
+                log.info("Success")
             except OSError:
                 print_error("Failed to remove " + STEAMCMD_STEAMAPPS + " folder. Usually this does not indicate a problem.\n"
                             + "If this is a TCAdmin Server and you're using the TCAdmin SteamCMD it may prevent mods from updating.")
 
     def append_installed_mods(self, modids):
-        log.debug("Gurr. Reading installed mods...")
+        log.info("Gurr. Reading installed mods...")
 
         if not os.path.isdir(os.path.join(self.server_directory, SERVER_MOD_DIRECTORY)):
             print_error("Given server directory " + self.server_directory + " does not contain " + SERVER_MOD_DIRECTORY + ".\n"
@@ -114,7 +116,7 @@ class ModDodo:
         for current_dir, directories, files in os.walk(os.path.join(self.server_directory, SERVER_MOD_DIRECTORY)):
             for directory in directories:
                 # AFAIK these are updated by Ark itself, maybe only with -automanagedmods
-                if directory not in ["111111111", "Ragnarok", "TheCenter"]:
+                if directory not in ["111111111", "Ragnarok", "TheCenter", "Valguero"]:
                     modids.append(directory)
             break
 
@@ -124,6 +126,7 @@ class ModDodo:
             args.extend(["+workshop_download_item", "346110", modid])
         args.append("+quit")
         try:
+            log.debug(f"Downloading mods: {args}")
             return subprocess.call(args) == 0
         except Exception as e:
             print_error("Could not start steamcmd to download mods:\n" + str(e))
@@ -134,7 +137,7 @@ class ModDodo:
         Extract the .z files using the arkit lib.
         :returns false, if any file fails to download
         """
-        log.debug("- Extracting mod " + str(modid) + "...")
+        log.info("- Extracting mod " + str(modid) + "...")
 
         try:
             for curdir, subdirs, files in os.walk(os.path.join(self.download_mod_directory, modid, WINDOWS_NOEDITOR)):
@@ -144,9 +147,12 @@ class ModDodo:
                         src = os.path.join(curdir, file)
                         dst = os.path.join(curdir, name)
                         uncompressed = os.path.join(curdir, file + ".uncompressed_size")
+                        log.debug(f"Unpacking {src} to {dst}")
                         arkit.unpack(src, dst)
+                        log.debug(f"Remove {src}")
                         os.remove(src)
                         if os.path.isfile(uncompressed):
+                            log.info(f"Also remove {uncompressed}")
                             os.remove(uncompressed)
 
             return True
@@ -160,11 +166,12 @@ class ModDodo:
         Create the .mod file.
         This code is an adaptation of the code from Ark Server Launcher.  All credit goes to Face Wound on Steam
         """
-        log.debug("- Writing .mod file...")
+        log.info("- Writing .mod file...")
         if not self.parse_base_info(modid) or not self.parse_meta_data(modid):
             return False
 
         with open(os.path.join(self.download_mod_directory, modid, WINDOWS_NOEDITOR_MODFILE), "w+b") as f:
+            log.debug(f"Writing {os.path.join(self.download_mod_directory, modid, WINDOWS_NOEDITOR_MODFILE)}")
 
             modid = int(modid)
             f.write(struct.pack('ixxxx', modid))  # Needs 4 pad bits
@@ -205,7 +212,7 @@ class ModDodo:
         It will delete an existing mod with the same ID
         """
 
-        log.debug("- Moving mod...")
+        log.info("- Moving mod...")
 
         ark_mod_directory = os.path.join(self.server_directory, SERVER_MOD_DIRECTORY)
         target_mod_directory = os.path.join(ark_mod_directory, str(modid))
@@ -218,6 +225,7 @@ class ModDodo:
             if os.path.isdir(target_mod_directory):
                 shutil.rmtree(target_mod_directory)
 
+            log.debug(f"Copying {source_mod_directory} over {target_mod_directory}")
             shutil.copytree(source_mod_directory, target_mod_directory)
             return True
         except Exception as e:
@@ -238,6 +246,7 @@ class ModDodo:
         return file.read(count)[:-1].decode()
 
     def write_ue4_string(self, string_to_write, file):
+        log.debug(f"Write ue4 string: {string_to_write}")
         string_length = len(string_to_write) + 1
         file.write(struct.pack('i', string_length))
         barray = bytearray(string_to_write, "utf-8")
@@ -295,7 +304,7 @@ class ModDodo:
                                 + "Skipping and trying to continue anyway...")
 
                 if key and value:
-                    log.debug("   * " + key + " = " + value)
+                    log.info("   * " + key + " = " + value)
                     self.meta_data[key] = value
 
         return True
@@ -324,6 +333,7 @@ def print_error(msg):
 
 
 def main():
+    log.info("Moddodo called from shell!!!")
     parser = argparse.ArgumentParser(description="Installs ARK Linux server mods via SteamCMD")
     parser.add_argument("--serverdir", default=".", dest="serverdir", help="home directory of the server (containing the /ShooterGame folder)")
     parser.add_argument("--modids", nargs="+", default=None, dest="modids", help="space-separated list of IDs of mods to install")
@@ -335,7 +345,7 @@ def main():
 
     if not args.modids and not args.updatemods:
         print_error("Neither mod ids provided nor update requested. Don't know what to dodo.")
-        log.debug(parser.format_help())
+        log.info(parser.format_help())
         sys.exit(1)
 
     ModDodo(args.steamcmd,
