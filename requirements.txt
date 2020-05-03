@@ -11,3 +11,4 @@ eventlet
 flask-socketio
 patreon
 gitpython
+peewee
