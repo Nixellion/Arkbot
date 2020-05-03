@@ -7,6 +7,15 @@ from paths import *
 from debug import get_logger
 log = get_logger("arkbot")
 
+import os, shutil
+def copytree(src, dst, symlinks=False, ignore=None):
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, symlinks, ignore)
+        else:
+            shutil.copy2(s, d)
 
 def back_up(folder=None):
     if folder:
@@ -24,6 +33,10 @@ def back_up(folder=None):
         dest = os.path.join(backup_dir, filename)
         log.debug(f"Copying {filepath} to {dest}")
         shutil.copy(filepath, dest)
+
+    for dirpath in BACKUP_DIRS:
+        dirname = os.path.basename(os.path.normpath(dirpath))
+        copytree(dirpath, os.path.join(BACKUP_DIRS, dirname))
 
     log.info("Backup complete.")
 
