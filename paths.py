@@ -38,4 +38,4 @@ BACKUP_FILES = [
 
 
 for filename in ["_default.cfg", "arkserver.cfg",  "common.cfg"]:
-    backup_files.append(os.path.join(LGSM_CONFIG_DIR, filename))
+    BACKUP_FILES.append(os.path.join(LGSM_CONFIG_DIR, filename))
