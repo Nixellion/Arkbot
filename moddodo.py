@@ -30,6 +30,7 @@ WINDOWS_NOEDITOR_MODMETA_INFO = WINDOWS_NOEDITOR + "/modmeta.info"
 
 
 def run_shell_command_as_user(command, user='arkserver', shell=True):
+    command = " ".join(command)
     log.debug(f"Running shell command: {command}; as user {user}")
     if user != 'root':
         cmd = f"""su - {user} -c '{command}'"""
