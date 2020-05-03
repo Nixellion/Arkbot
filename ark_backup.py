@@ -10,7 +10,11 @@ def back_up(folder=None):
         backup_dir = os.path.join(BACKUPS_DIR, folder)
     else:
         backup_dir = BACKUPS_DIR
+
     log.info(f"Backing up server data into {backup_dir}")
+
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir, exist_ok=True)
 
     for filepath in BACKUP_FILES:
         filename = os.path.basename(filepath)
