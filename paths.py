@@ -1,8 +1,11 @@
 import os
 
+
 ARK_STEAMID = "346110"
 
 APP_DIR = os.path.dirname(os.path.realpath(__file__))
+
+DATABASE_PATH = os.path.join(APP_DIR, "database.db")
 
 CONFIG_FILE_PATH = os.path.join(APP_DIR, "config", "config.yaml")
 
@@ -32,6 +35,7 @@ BACKUPS_DIR = os.path.join(APP_DIR, "backups")
 
 BACKUP_FILES = [
     CONFIG_FILE_PATH,
+    DATABASE_PATH,
     os.path.join(CONFIGS_DIR, "Game.ini"),
     os.path.join(CONFIGS_DIR, "GameUserSettings.ini"),
 ]

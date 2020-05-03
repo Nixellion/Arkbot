@@ -10,7 +10,7 @@ from datetime import datetime, date
 import sys
 from peewee import *
 from ark_manager import *
-from paths import APP_DIR
+from paths import APP_DIR, DATABASE_PATH
 
 from git import Repo as GitRepo
 
@@ -22,7 +22,7 @@ pp = PrettyPrinter(indent=4)
 
 # region ############################# GLOBALS #############################
 
-db_path = os.path.join(APP_DIR, 'database.db')
+db_path = DATABASE_PATH
 db = SqliteDatabase(db_path)
 
 # endregion
