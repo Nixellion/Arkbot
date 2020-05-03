@@ -10,7 +10,6 @@ import functools
 basedir = os.path.dirname(os.path.realpath(__file__))
 
 
-
 def setup_logging(
     default_path=os.path.join(basedir, 'config', 'logger.yaml'),
     default_level=logging.INFO,
@@ -54,7 +53,10 @@ loggers = {}
 def get_logger(name):
     global loggers
 
+
+    
     if loggers.get(name):
+        # print (f"Logger {name} exists, reuse.")
         return loggers.get(name)
     else:
         logger = logging.getLogger(name)

@@ -11,14 +11,18 @@ import subprocess
 from collections import OrderedDict
 import struct
 
+from paths import *
+
+from linux_utils import run_shell_command_as_user
 
 from debug import get_logger
 log = get_logger("moddodo")
 
 SERVER_MOD_DIRECTORY = "ShooterGame/Content/Mods"
 
-STEAMCMD_STEAMAPPS = "steamapps"
-STEAMCMD_MODS_PATH = STEAMCMD_STEAMAPPS + "/workshop/content/346110"
+STEAMCMD_STEAMAPPS = STEAMCMD_STEAMAPPS_DIR
+STEAMCMD_MODS_PATH = STEAMCMD_MODS_DIR
+
 
 SERVER_CHECK_PATH = "ShooterGame/Content"
 STEAMCMD_SCRIPT = "steamcmd.sh"
@@ -29,21 +33,7 @@ WINDOWS_NOEDITOR_MOD_INFO = WINDOWS_NOEDITOR + "/mod.info"
 WINDOWS_NOEDITOR_MODMETA_INFO = WINDOWS_NOEDITOR + "/modmeta.info"
 
 
-def run_shell_command_as_user(command, user='arkserver', shell=True):
-    command = " ".join(command)
-    log.debug(f"Running shell command: {command}; as user {user}")
-    if user != 'root':
-        cmd = f"""su - {user} -c '{command}'"""
-    else:
-        cmd = command
-    try:
-        cmd_out = subprocess.call(cmd, shell=True)#.decode("utf-8") #os.system(cmd)
-        log.debug(f"Command '{cmd}' exit code: {cmd_out}")
-    except subprocess.CalledProcessError as e:
-        log.warning(f"Shell command '{cmd}' ran with errors.", exc_info=True)
-        cmd_out = str(e.message)
-    #cmd_out = check_output(cmd)
-    return str(cmd_out)
+
 
 class ModDodo:
     def __init__(self, steamcmd_directory, modids, server_directory, mod_update, steamcmd_delete_cache):
@@ -64,19 +54,19 @@ class ModDodo:
         self.map_names = []  # stores map names from mod.info
         self.meta_data = OrderedDict([])  # stores key value from modmeta.info
 
-        self.download_mod_directory = os.path.join(self.steamcmd_directory, STEAMCMD_MODS_PATH)
+        self.download_mod_directory = STEAMCMD_MODS_PATH
 
         if steamcmd_delete_cache:
             self.delete_steamcmd_cache()
 
         if not self.download_mods(modids):
-            print_error("Could not download mods")
+            log.error("Could not download mods")
             sys.exit(1)
 
         # SteamCMD does not properly break lines
         print("")
 
-        log.debug(" ;\n".join("ModDodo starting up:", self.steamcmd_directory, self.server_directory, self.download_mod_directory, SERVER_MOD_DIRECTORY, STEAMCMD_MODS_PATH, SERVER_CHECK_PATH, STEAMCMD_SCRIPT, WINDOWS_NOEDITOR, WINDOWS_NOEDITOR_MOD_INFO, WINDOWS_NOEDITOR_MODFILE, WINDOWS_NOEDITOR_MODMETA_INFO))
+        log.debug(" ;\n".join(["ModDodo starting up:", self.steamcmd_directory, self.server_directory, self.download_mod_directory, SERVER_MOD_DIRECTORY, STEAMCMD_MODS_PATH, SERVER_CHECK_PATH, STEAMCMD_SCRIPT, WINDOWS_NOEDITOR, WINDOWS_NOEDITOR_MOD_INFO, WINDOWS_NOEDITOR_MODFILE, WINDOWS_NOEDITOR_MODMETA_INFO]))
 
         for modid in modids:
             if self.extract_mod(modid):
@@ -84,22 +74,22 @@ class ModDodo:
                     if self.move_mod(modid):
                         log.info("Mod " + str(modid) + " successfully installed")
                     else:
-                        print_error("Could not move mod " + str(modid))
+                        log.error("Could not move mod " + str(modid))
                 else:
-                    print_error("Could not create .mod file for mod " + str(modid))
+                    log.error("Could not create .mod file for mod " + str(modid))
             else:
-                print_error("Could not extract mod " + str(modid))
+                log.error("Could not extract mod " + str(modid))
 
     def check_server_directory(self):
         if not os.path.isdir(os.path.join(self.server_directory, SERVER_CHECK_PATH)):
-            print_error("Given server directory " + self.server_directory + " does not contain '" + SERVER_CHECK_PATH + "'")
+            log.error("Given server directory " + self.server_directory + " does not contain '" + SERVER_CHECK_PATH + "'")
             sys.exit(1)
         else:
             log.info("Installing mods for server: " + self.server_directory)
 
     def check_steamcmd_directory(self):
         if not os.path.isfile(os.path.join(self.steamcmd_directory, STEAMCMD_SCRIPT)):
-            print_error("Given SteamCMD directory " + self.steamcmd_directory + " does not contain '" + STEAMCMD_SCRIPT + "'\n"
+            log.error("Given SteamCMD directory " + self.steamcmd_directory + " does not contain '" + STEAMCMD_SCRIPT + "'\n"
                         + "\tSee https://developer.valvesoftware.com/wiki/SteamCMD#Linux on how to install")
             sys.exit(1)
         else:
@@ -112,7 +102,7 @@ class ModDodo:
         by another customer, SteamCMD will think it already exists and not download it again. This means the old version
         will still be used.
         """
-        steamapps = os.path.join(os.path.dirname(self.steamcmd_directory), STEAMCMD_STEAMAPPS)
+        steamapps = STEAMCMD_STEAMAPPS
 
         if os.path.isdir(steamapps):
             log.info("Trying to remove " + STEAMCMD_STEAMAPPS + " folder...")
@@ -120,14 +110,14 @@ class ModDodo:
                 shutil.rmtree(steamapps)
                 log.info("Success")
             except OSError:
-                print_error("Failed to remove " + STEAMCMD_STEAMAPPS + " folder. Usually this does not indicate a problem.\n"
+                log.error("Failed to remove " + STEAMCMD_STEAMAPPS + " folder. Usually this does not indicate a problem.\n"
                             + "If this is a TCAdmin Server and you're using the TCAdmin SteamCMD it may prevent mods from updating.")
 
     def append_installed_mods(self, modids):
         log.info("Gurr. Reading installed mods...")
 
         if not os.path.isdir(os.path.join(self.server_directory, SERVER_MOD_DIRECTORY)):
-            print_error("Given server directory " + self.server_directory + " does not contain " + SERVER_MOD_DIRECTORY + ".\n"
+            log.error("Given server directory " + self.server_directory + " does not contain " + SERVER_MOD_DIRECTORY + ".\n"
                         + "Cannot find any mods to update.")
             return
         for current_dir, directories, files in os.walk(os.path.join(self.server_directory, SERVER_MOD_DIRECTORY)):
@@ -144,9 +134,9 @@ class ModDodo:
         args.append("+quit")
         try:
             log.debug(f"Downloading mods: {args}")
-            return run_shell_command_as_user(args) == 0#subprocess.call(args) == 0
+            return run_shell_command_as_user(args) == 0 #subprocess.call(args) == 0
         except Exception as e:
-            print_error("Could not start steamcmd to download mods:\n" + str(e))
+            log.error("Could not start steamcmd to download mods:\n" + str(e))
             sys.exit(1)
 
     def extract_mod(self, modid):
@@ -175,7 +165,7 @@ class ModDodo:
             return True
 
         except (arkit.UnpackException, arkit.SignatureUnpackException, arkit.CorruptUnpackException) as e:
-            print_error(str(e))
+            log.error(str(e))
             return False
 
     def create_mod_file(self, modid):
@@ -246,7 +236,7 @@ class ModDodo:
             shutil.copytree(source_mod_directory, target_mod_directory)
             return True
         except Exception as e:
-            print_error("Encountered unexpected exception during move operation from " + source_mod_directory + " to " + target_mod_directory + ":\n"
+            log.error("Encountered unexpected exception during move operation from " + source_mod_directory + " to " + target_mod_directory + ":\n"
                         + str(e))
             return False
 
@@ -285,7 +275,7 @@ class ModDodo:
 
         mod_meta = os.path.join(self.download_mod_directory, modid, WINDOWS_NOEDITOR_MODMETA_INFO)
         if not os.path.isfile(mod_meta):
-            print_error("Could not find " + WINDOWS_NOEDITOR_MODMETA_INFO + " in " + self.download_mod_directory + "/" + modid)
+            log.error("Could not find " + WINDOWS_NOEDITOR_MODMETA_INFO + " in " + self.download_mod_directory + "/" + modid)
             return False
 
         with open(mod_meta, "rb") as f:
@@ -317,7 +307,7 @@ class ModDodo:
                     value = raw[:-1].decode()
 
                 if key == "" or value == "":
-                    print_error("Found potentially bad mapping: " + key + " = " + value + "\n"
+                    log.error("Found potentially bad mapping: " + key + " = " + value + "\n"
                                 + "Skipping and trying to continue anyway...")
 
                 if key and value:
@@ -330,7 +320,7 @@ class ModDodo:
         mod_info = os.path.join(self.download_mod_directory, modid, WINDOWS_NOEDITOR_MOD_INFO)
 
         if not os.path.isfile(mod_info):
-            print_error("Could not find " + WINDOWS_NOEDITOR_MOD_INFO + " in " + self.download_mod_directory + "/" + modid)
+            log.error("Could not find " + WINDOWS_NOEDITOR_MOD_INFO + " in " + self.download_mod_directory + "/" + modid)
             return False
 
         with open(mod_info, "rb") as f:
@@ -345,8 +335,7 @@ class ModDodo:
         return True
 
 
-def print_error(msg):
-    log.error("\n[ERROR] " + msg)
+
 
 
 def main():
@@ -361,7 +350,7 @@ def main():
     args = parser.parse_args()
 
     if not args.modids and not args.updatemods:
-        print_error("Neither mod ids provided nor update requested. Don't know what to dodo.")
+        log.error("Neither mod ids provided nor update requested. Don't know what to dodo.")
         log.info(parser.format_help())
         sys.exit(1)
 

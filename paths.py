@@ -1,7 +1,7 @@
 import os
-from logging import getLogger
 
-log = getLogger("arkbot")
+from debug import get_logger
+log = get_logger("default")
 
 ARK_STEAMID = "346110"
 
@@ -19,9 +19,14 @@ ARK_MODS_DIR = os.path.join(ARK_SERVER_DIR, "ShooterGame", "Content", "Mods" )
 
 ARK_SAVED_DIR = os.path.join(HOME_DIR, "serverfiles", "ShooterGame", "Saved")
 
-STEAMCMD = r"/home/arkserver/steamcmd/steamcmd.sh"
+STEAMCMD = os.path.join(HOME_DIR, ".steam", "steamcmd", "steamcmd.sh")
+STEAMCMD_STEAMAPPS_DIR = os.path.join(HOME_DIR, ".local", "share", "Steam", "steamapps")
+STEAMCMD_MODS_DIR = os.path.join(STEAMCMD_STEAMAPPS_DIR, "workshop", "content", ARK_STEAMID)
 
-STEAM_MODS_DIR = os.path.join("/home/arkserver/.local/share/Steam/steamapps/workshop/content", ARK_STEAMID)
+
+log.debug(f"STEAMCMD: {STEAMCMD}")
+
+
 
 ARK_CONFIGS_DIR = os.path.join(ARK_SAVED_DIR, "Config", "LinuxServer")
 

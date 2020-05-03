@@ -36,11 +36,13 @@ stop_server()
 active_mods = get_active_mods()
 log.info(f"Updating mods: {active_mods}")
 update_mods(active_mods)
-#force_copy_mods() # Do not use this, they need to be unpacked as well
+
 fix_mods_permissions()
+
 start_server()
 
-run_shell_command_as_user("service arkdashboard restart", user="root")
+
 print ("Remove lock...")
 lock.unlock()
-broadcast(f"Server was restarted to force update mods. Should be back up in a few minutes. {args.message}{choice(random_funny_bits)}", False)
+# run_shell_command_as_user("service arkdashboard restart", user="root")
+# broadcast(f"Server was restarted to force update mods. Should be back up in a few minutes. {args.message}{choice(random_funny_bits)}", False)

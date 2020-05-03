@@ -26,6 +26,7 @@ def restore(folder=None):
             log.debug(f"Copying {backup_filepath} to {restore_filepath}")
             try:
                 shutil.copy(backup_filepath, restore_filepath)
+                fix_permissions(restore_filepath)
             except shutil.SameFileError:
                 log.debug(f"Same file, not copying {backup_filepath} - {restore_filepath}")
             except:
@@ -43,6 +44,7 @@ def restore(folder=None):
             log.debug(f"Copying {backup_dirpath} to {restore_dirpath}")
             try:
                 copytree(backup_dirpath, restore_dirpath)
+                fix_permissions(restore_dirpath)
             except:
                 log.error(f"Error copying directory {backup_dirpath}!", exc_info=True)
         else:

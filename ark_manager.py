@@ -8,6 +8,8 @@ import re
 from paths import *
 from configuration import server
 
+from linux_utils import run_shell_command_as_user
+
 from locks import Lock
 
 from discord_webhook import DiscordWebhook
@@ -20,7 +22,7 @@ from moddodo import ModDodo
 rp = realpath = os.path.dirname(os.path.realpath(__file__))
 
 from debug import get_logger
-log = get_logger("arkbot")
+log = get_logger("ark_manager")
 
 random_funny_bits = [
     "Time to find shelter!",
@@ -184,11 +186,6 @@ import shutil
 
 def update_mods(mod_ids):
     try:
-        for filename in os.listdir(ARK_MODS_DIR):
-            fp = os.path.join(ARK_MODS_DIR, filename)
-            if os.path.isdir(fp) and filename not in STANDARD_MODS:
-                shutil.rmtree(fp)
-        run_shell_command_as_user(f"rm -rf {STEAM_MODS_DIR}/*", user='root')
         ModDodo(os.path.dirname(STEAMCMD),
                 mod_ids,
                 ARK_SERVER_DIR,
@@ -199,16 +196,23 @@ def update_mods(mod_ids):
         log.error("Unable to update mods.", exc_info=True)
         return False
 
-def fix_mods_permissions():
+def fix_permissions(path):
     try:
-        run_shell_command_as_user(f"chown -R arkserver:arkserver {ARK_MODS_DIR}", user='root')
+        if os.path.isdir(path):
+            log.debug(f"Fix permissions recursively for directory {path}")
+            run_shell_command_as_user(f"chown -R arkserver:arkserver {path}", user='root')
+        else:
+            log.debug(f"Fix permissions for file {path}")
+            run_shell_command_as_user(f"chown arkserver:arkserver {path}", user='root')
         return True
     except:
         log.error("Unable to fix mod permissions.", exc_info=True)
         return False
 
-def force_copy_mods():
-    run_shell_command_as_user(f"cp -r {STEAM_MODS_DIR}/* {ARK_MODS_DIR}")
+def fix_mods_permissions():
+    fix_permissions(ARK_MODS_DIR)
+
+
 
 def check_output(cmd):
     log.debug(f"Running shell command raw: {cmd}")
@@ -219,20 +223,7 @@ def check_output(cmd):
     log.debug(f"Command '{cmd}' output: {process.returncode}; {output}")
     return output
 
-def run_shell_command_as_user(command, user='arkserver', shell=True):
-    log.debug(f"Running shell command: {command}; as user {user}")
-    if user != 'root':
-        cmd = f"""su - {user} -c '{command}'"""
-    else:
-        cmd = command
-    try:
-        cmd_out = subprocess.call(cmd, shell=True)#.decode("utf-8") #os.system(cmd)
-        log.debug(f"Command '{cmd}' exit code: {cmd_out}")
-    except subprocess.CalledProcessError as e:
-        log.warning(f"Shell command '{cmd}' ran with errors.", exc_info=True)
-        cmd_out = str(e.message)
-    #cmd_out = check_output(cmd)
-    return str(cmd_out)
+
 
 
 def update_server():
