@@ -36,7 +36,7 @@ def back_up(folder=None):
 
     for dirpath in BACKUP_DIRS:
         dirname = os.path.basename(os.path.normpath(dirpath))
-        copytree(dirpath, os.path.join(BACKUP_DIRS, dirname))
+        copytree(dirpath, os.path.join(BACKUPS_DIR, dirname))
 
     log.info("Backup complete.")
 
