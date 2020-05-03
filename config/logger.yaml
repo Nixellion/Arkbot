@@ -23,24 +23,24 @@ handlers:
 
 root:
     level: ERROR
-    handlers: [debug_file_handler]
+    handlers: [debug_file_handler, console]
 
 loggers:
   "ark_manager":
     level: DEBUG
-    handlers: [debug_file_handler]
+    handlers: [debug_file_handler, console]
   "arkbot":
     level: DEBUG
-    handlers: [debug_file_handler]
+    handlers: [debug_file_handler, console]
   "moddodo":
     level: DEBUG
-    handlers: [debug_file_handler]
+    handlers: [debug_file_handler, console]
   "ark_discord_bot":
       level: DEBUG
-      handlers: [debug_file_handler]
+      handlers: [debug_file_handler, console]
   "ark_dashboard":
       level: DEBUG
-      handlers: [debug_file_handler]
+      handlers: [debug_file_handler, console]
   "ark_updater":
       level: DEBUG
-      handlers: [debug_file_handler]
+      handlers: [debug_file_handler, console]
