@@ -39,6 +39,7 @@ def restore(folder=None):
             backup_dirpath = os.path.join(backup_dir, dirname)
             if not os.path.exists(restore_dirpath):
                 os.makedirs(restore_dirpath, exist_ok=True)
+            run_shell_command_as_user(f"rm -rf {restore_dirpath}/*", user="root")
             log.debug(f"Copying {backup_dirpath} to {restore_dirpath}")
             try:
                 copytree(backup_dirpath, restore_dirpath)

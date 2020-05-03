@@ -20,6 +20,8 @@ def back_up(folder=None):
     if not os.path.exists(backup_dir):
         os.makedirs(backup_dir, exist_ok=True)
 
+    run_shell_command_as_user(f"rm -rf {backup_dir}/*", user="root")
+
     for filepath in BACKUP_FILES:
         filename = os.path.basename(filepath)
         dest = os.path.join(backup_dir, filename)
