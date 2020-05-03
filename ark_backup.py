@@ -48,3 +48,5 @@ if __name__ == "__main__":
     if lock.locked:
         log.debug("Another script already running, exit...")
         sys.exit()
+else:
+    print ("Name not main just import")
