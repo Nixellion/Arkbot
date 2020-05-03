@@ -4,6 +4,9 @@ from ark_manager import *
 
 from paths import *
 
+from debug import get_logger
+log = get_logger("arkbot")
+
 
 def back_up(folder=None):
     if folder:
