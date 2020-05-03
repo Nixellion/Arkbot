@@ -21,6 +21,6 @@ GAMEUSERSETTINGS = os.path.join(CONFIGS_DIR, "GameUserSettings.ini")
 DOWNLOADS_DIR = os.path.join(APP_DIR, "downloads")
 
 
-
+STANDARD_MODS = ["111111111", "Ragnarok", "TheCenter", "Valguero"]
 
 

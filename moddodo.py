@@ -11,6 +11,8 @@ import subprocess
 from collections import OrderedDict
 import struct
 
+from ark_manager import run_shell_command_as_user
+
 from debug import get_logger
 log = get_logger("moddodo")
 
@@ -127,7 +129,7 @@ class ModDodo:
         args.append("+quit")
         try:
             log.debug(f"Downloading mods: {args}")
-            return subprocess.call(args) == 0
+            return run_shell_command_as_user(args) == 0#subprocess.call(args) == 0
         except Exception as e:
             print_error("Could not start steamcmd to download mods:\n" + str(e))
             sys.exit(1)

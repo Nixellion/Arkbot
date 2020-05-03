@@ -180,11 +180,14 @@ def check_mod_versions():
 
     return None # Return mod IDs that needs to be updated or None if none
 
-
+import shutil
 
 def update_mods(mod_ids):
     try:
-        run_shell_command_as_user(f"rm -rf {ARK_MODS_DIR}/*", user='root')
+        for filename in os.listdir(ARK_MODS_DIR):
+            fp = os.path.join(ARK_MODS_DIR, filename)
+            if os.path.isdir(fp) and filename not in STANDARD_MODS:
+                shutil.rmtree(fp)
         run_shell_command_as_user(f"rm -rf {STEAM_MODS_DIR}/*", user='root')
         ModDodo(os.path.dirname(STEAMCMD),
                 mod_ids,
