@@ -27,7 +27,9 @@ def back_up(folder=None):
 
     log.info("Backup complete.")
 
+
 if __name__ == "__main__":
+
     from locks import Lock
     import argparse
 
@@ -48,5 +50,9 @@ if __name__ == "__main__":
     if lock.locked:
         log.debug("Another script already running, exit...")
         sys.exit()
+
+    lock.lock()
+    back_up()
+    lock.unlock()
 else:
     print ("Name not main just import")
