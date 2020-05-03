@@ -11,7 +11,6 @@ import subprocess
 from collections import OrderedDict
 import struct
 
-from ark_manager import run_shell_command_as_user
 
 from debug import get_logger
 log = get_logger("moddodo")
@@ -29,6 +28,21 @@ WINDOWS_NOEDITOR_MODFILE = WINDOWS_NOEDITOR + "/.mod"
 WINDOWS_NOEDITOR_MOD_INFO = WINDOWS_NOEDITOR + "/mod.info"
 WINDOWS_NOEDITOR_MODMETA_INFO = WINDOWS_NOEDITOR + "/modmeta.info"
 
+
+def run_shell_command_as_user(command, user='arkserver', shell=True):
+    log.debug(f"Running shell command: {command}; as user {user}")
+    if user != 'root':
+        cmd = f"""su - {user} -c '{command}'"""
+    else:
+        cmd = command
+    try:
+        cmd_out = subprocess.call(cmd, shell=True)#.decode("utf-8") #os.system(cmd)
+        log.debug(f"Command '{cmd}' exit code: {cmd_out}")
+    except subprocess.CalledProcessError as e:
+        log.warning(f"Shell command '{cmd}' ran with errors.", exc_info=True)
+        cmd_out = str(e.message)
+    #cmd_out = check_output(cmd)
+    return str(cmd_out)
 
 class ModDodo:
     def __init__(self, steamcmd_directory, modids, server_directory, mod_update, steamcmd_delete_cache):
