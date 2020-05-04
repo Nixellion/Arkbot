@@ -86,20 +86,32 @@
 </script>
 
 <script>
-function GetJSON(yourUrl){
-    var Httpreq = new XMLHttpRequest(); // a new request
-    Httpreq.open("GET",yourUrl,false);
-    Httpreq.send(null);
-    return JSON.parse(Httpreq.responseText);
-}
-
 $(document).ready(function() {
-    var update_available = GetJSON("/api/check_update");
-    console.log(update_available);
-    document.getElementById("updater_loader").remove();
-    if (update_available.success == true) {
-            document.getElementById("locks").innerHTML += '<a href="/api/update"><i class="fas fa-exclamation-triangle text-danger" title="Update available!" data-toggle="tooltip" data-placement="bottom"></i></a>';
-    }
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/check_update", true);
+    xhr.onload = function (e) {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var update_available = JSON.parse(xhr.responseText);
+          console.log(update_available);
+            document.getElementById("updater_loader").remove();
+            if (update_available.success == true) {
+                    document.getElementById("locks").innerHTML += '<a href="/api/update"><i class="fas fa-exclamation-triangle text-danger" title="Update available!" data-toggle="tooltip" data-placement="bottom"></i></a>';
+            }
+        } else {
+          console.error(xhr.statusText);
+        }
+      }
+    };
+    xhr.onerror = function (e) {
+      console.error(xhr.statusText);
+    };
+    xhr.send(null);
+
+
+
+
+
 });
 </script>
 
