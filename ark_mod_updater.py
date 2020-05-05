@@ -6,6 +6,8 @@ from locks import Lock
 
 from debug import get_logger
 
+from functools import partial
+
 log = get_logger("arkbot")
 
 import argparse
@@ -24,16 +26,33 @@ if args.message:
 
 
 def mod_updater():
+    lock = Lock()
+
+    if lock.locked:
+        log.debug("Another script already running, exit...")
+        sys.exit()
     modids = check_mod_versions()
     if modids:
-        log.info("New mods detected.")
+        log.info("New mod version found, performing update.")
+        lock.lock("Locked for update...")
+        delay_with_notifications(message="Updating mods.")
         stop_server()
         log.info(f"Updating mods: {modids}")
         update_mods(modids)
         fix_mods_permissions()
         start_server()
         time.sleep(10 * 60)
+        lock.unlock()
+    else:
+        log.info("No new mod version found.")
+
+
+
+    if modids:
+        log.info("New mods detected.")
+
 
 
 if __name__ == "__main__":
-    run_with_lock(run_with_delay(mod_updater, delay_minutes=[15, 10, 5], message="Updating mods"), "Mod updater.")
+    mod_updater()
+

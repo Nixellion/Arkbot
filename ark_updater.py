@@ -27,7 +27,7 @@ def update():
         print ("Update found!")
         log.info("New version found, performing update.")
         lock.lock("Locked for update...")
-        run_with_delay(update_server, message="Update detected")
+        run_with_delay(update_server, message="Update detected. ")
         update_server()
         time.sleep(30 * 60)
         lock.unlock()

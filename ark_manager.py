@@ -320,7 +320,7 @@ def discord_message(message):
 def run_with_lock(func, lock_name="general", message=""):
     log.debug(f"Running {func.__name__} with lock...")
 
-    lock = Lock()
+    lock = Lock(lock_name)
     if lock.locked:
         log.debug(f"Another script already running, abort running {func.__name__}...")
         sys.exit()
