@@ -22,27 +22,15 @@ if args.message:
     else:
         args.message = args.message + " "
 
-lock = Lock()
-if lock.locked:
-    log.debug("Another script already running, exit...")
-    sys.exit()
+def force_update_mods():
+    log.info("Admin initialized force update mods.")
+    stop_server()
+    active_mods = get_active_mods()
+    log.info(f"Updating mods: {active_mods}")
+    update_mods(active_mods)
+    fix_mods_permissions()
+    start_server()
 
-lock.lock("Force mods update.")
+if __name__ == "__main__":
 
-print ("Starting...")
-log.info("Admin initialized force update mods.")
-
-stop_server()
-active_mods = get_active_mods()
-log.info(f"Updating mods: {active_mods}")
-update_mods(active_mods)
-
-fix_mods_permissions()
-
-start_server()
-
-
-print ("Remove lock...")
-lock.unlock()
-# run_shell_command_as_user("service arkdashboard restart", user="root")
-# broadcast(f"Server was restarted to force update mods. Should be back up in a few minutes. {args.message}{choice(random_funny_bits)}", False)
+    run_with_lock(force_update_mods, message="Force update mods.")

@@ -19,3 +19,20 @@ def run_shell_command_as_user(command, user='arkserver', shell=True, flatten_com
     #cmd_out = check_output(cmd)
     log.debug(f"Shell command '{cmd}' exit code: {cmd_out}; code type {type(cmd_out)}; command ran without errors - {cmd_out == 0}")
     return cmd_out
+
+
+def run_shell_command_as_user_check_output(command, user='arkserver', shell=True, flatten_command=True):
+    if flatten_command and isinstance(command, list):
+        command = " ".join(command)
+    log.debug(f"Running shell command: {command}; as user {user}")
+    if user != 'root':
+        cmd = f"""su - {user} -c '{command}'"""
+    else:
+        cmd = command
+    try:
+        cmd_out = subprocess.check_output(cmd, shell=True)#.decode("utf-8") #os.system(cmd)
+    except subprocess.CalledProcessError as e:
+        log.warning(f"Shell command '{cmd}' ran with errors.", exc_info=True)
+        cmd_out = str(e.message)
+    log.debug(f"Shell command '{cmd}' exit data: {cmd_out};")
+    return cmd_out

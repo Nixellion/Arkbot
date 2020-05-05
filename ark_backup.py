@@ -56,14 +56,7 @@ if __name__ == "__main__":
         else:
             args.message = args.message + " "
 
-    lock = Lock()
+    run_with_lock(back_up, message="Backing up.")
 
-    if lock.locked:
-        log.debug("Another script already running, exit...")
-        sys.exit()
-
-    lock.lock()
-    back_up()
-    lock.unlock()
 else:
     print ("Name not main just import")

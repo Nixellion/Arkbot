@@ -12,3 +12,5 @@ flask-socketio
 patreon
 gitpython
 peewee
+bs4
+requests

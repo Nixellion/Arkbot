@@ -44,3 +44,6 @@ loggers:
   "ark_updater":
       level: DEBUG
       handlers: [debug_file_handler, console]
+  "default":
+    level: DEBUG
+    handlers: [debug_file_handler, console]

@@ -4,11 +4,13 @@ import requests
 import sys
 import subprocess
 import re
+from datetime import datetime, timedelta
+from bs4 import BeautifulSoup
 
 from paths import *
-from configuration import server
+from configuration import server, read_config, write_config
 
-from linux_utils import run_shell_command_as_user
+from linux_utils import run_shell_command_as_user, run_shell_command_as_user_check_output
 
 from locks import Lock
 
@@ -16,12 +18,12 @@ from discord_webhook import DiscordWebhook
 
 from mcrcon import MCRcon
 
-
 from moddodo import ModDodo
 
 rp = realpath = os.path.dirname(os.path.realpath(__file__))
 
-from debug import get_logger
+from debug import get_logger, catch_errors
+
 log = get_logger("ark_manager")
 
 random_funny_bits = [
@@ -44,9 +46,6 @@ random_funny_bits = [
     "I wanna tame an Iguanadon. Tribe leader says Iguanadon-t...",
     "Mess with the dodo and you'll get the choko"
 ]
-
-
-
 
 
 class Player(object):
@@ -148,7 +147,8 @@ def check_version():
     ## See if update is available
     ## should return a byte object as b'\t\t"branches"\n\t\t{\n\t\t\t"public"\n\t\t\t{\n\t\t\t\t"buildid"\t\t"3129691"\n'
     steamcmd = f"""{STEAMCMD} +login anonymous +app_info_update 1 +app_info_print 376030 +quit | sed -n '/"branches"/,/"buildid"/p' """
-    steam_out = run_shell_command_as_user(steamcmd)
+    steam_out = run_shell_command_as_user_check_output(steamcmd).decode()
+    log.debug(f"Steam out: {steam_out}")
     new_vers = pattern.search(steam_out).group()
 
     with open("/home/arkserver/serverfiles/steamapps/appmanifest_376030.acf") as inFile:
@@ -163,6 +163,7 @@ def check_version():
         log.info("Server reports up-to-date")
         return False
 
+
 def get_active_mods():
     with open(GAMEUSERSETTINGS, "r", encoding="utf8") as f:
         user_settings = f.readlines()
@@ -176,14 +177,50 @@ def get_active_mods():
     else:
         return mods_list
 
+@catch_errors
 def check_mod_versions():
-    log.info ("Checking for mod updates...")
+    log.info("Checking for mod updates...")
+
+    modids = get_active_mods()
+
+    memory = read_config("mod_updater_data")
+    if not memory:
+        memory = {}
+        for modid in modids:
+            memory[modid] = {'last_update': datetime.now()}
+        write_config("mod_updater_data", memory)
+
+    modids_to_update = []
+
+    for modid in modids:
+        mod_info_html = requests.get(f"https://steamcommunity.com/sharedfiles/filedetails/?id={modid}").text
+        soup = BeautifulSoup(mod_info_html, features="html.parser")
+        date_string = soup.find("div", {"id": "mainContents"}).find("div", {"class": "workshopItemPreviewArea"}).find_all(
+            "div", {"class": "detailsStatRight"})[2].text
+        try:
+            workshop_updated_date =  datetime.strptime(date_string, "%d %b, %Y @ %H:%M%p")
+        except ValueError:
+            workshop_updated_date = datetime.strptime(date_string, "%d %b @ %H:%M%p")
+            workshop_updated_date = workshop_updated_date.replace(year=datetime.now().year)
+
+        if workshop_updated_date > memory[modid]['last_update']:
+            log.debug(f"Update required for mod: {modid}")
+            modids.append(modid)
+
+    if len(modids_to_update) > 0:
+        log.info(f"Update required for mods: {modids_to_update}")
+        return modids_to_update
+    else:
+        log.info("All mods are up to date.")
+        return None
 
 
-    return None # Return mod IDs that needs to be updated or None if none
+
+
 
 import shutil
 
+@catch_errors
 def update_mods(mod_ids):
     try:
         ModDodo(os.path.dirname(STEAMCMD),
@@ -195,6 +232,7 @@ def update_mods(mod_ids):
     except:
         log.error("Unable to update mods.", exc_info=True)
         return False
+
 
 def fix_permissions(path):
     try:
@@ -209,9 +247,9 @@ def fix_permissions(path):
         log.error("Unable to fix mod permissions.", exc_info=True)
         return False
 
+
 def fix_mods_permissions():
     fix_permissions(ARK_MODS_DIR)
-
 
 
 def check_output(cmd):
@@ -222,8 +260,6 @@ def check_output(cmd):
         log.warning(f"Command '{cmd}' exited with non standard exit code: {process.returncode}")
     log.debug(f"Command '{cmd}' output: {process.returncode}; {output}")
     return output
-
-
 
 
 def update_server():
@@ -239,17 +275,20 @@ def restart_server():
     cmd_out = run_shell_command_as_user(steamcmd)
     log.info(str(cmd_out))
 
+
 def stop_server():
     log.info("Stopping...")
     steamcmd = """/home/arkserver/arkserver stop"""
     cmd_out = run_shell_command_as_user(steamcmd)
     log.info(str(cmd_out))
 
+
 def start_server():
     log.info("Starting...")
     steamcmd = """/home/arkserver/arkserver start"""
     cmd_out = run_shell_command_as_user(steamcmd)
     log.info(str(cmd_out))
+
 
 def reboot_server():
     log.info("Rebooting...")
@@ -264,10 +303,12 @@ def broadcast(message, discord=False):
 
     return rcon_command(f'broadcast {message}')
 
+
 def serverchat(message, discord=False):
     if discord:
         discord_message(f"[{server.name}] {message}")
     return rcon_command(f'ServerChat {message}')
+
 
 def discord_message(message):
     discord_webhook = DiscordWebhook(url=server.discord_webhook, content=message)
@@ -276,8 +317,48 @@ def discord_message(message):
     return response
 
 
+def run_with_lock(func, lock_name="general", message=""):
+    log.debug(f"Running {func.__name__} with lock...")
+
+    lock = Lock()
+    if lock.locked:
+        log.debug(f"Another script already running, abort running {func.__name__}...")
+        sys.exit()
+
+    lock.lock(message)
+
+    func()
+
+    log.debug(f"{func.__name__} finished. Removing lock.")
+    lock.unlock()
+
+from random import choice
+import time
+
+def delay_with_notifications(delay_minutes=(30, 15, 10, 5), message=""):
+    log.debug(f"delay_with_notifications: {delay_minutes}; {message}")
+
+    total = sum(delay_minutes)
+
+    for dm in delay_minutes:
+        broadcast(f"Server will restart in {total} minutes. {message}{choice(random_funny_bits)}", True)
+        total -= dm
+        time.sleep(dm * 60)
+
+    for i in range(1, 10):
+        broadcast(f"Restart in {10 - i}...")
+
+def run_with_delay(func, delay_minutes=(30, 15, 10, 5), message=""):
+    log.info(f"Running {func.__name__} with delay: {delay_minutes}")
+
+    delay_with_notifications(delay_minutes, message)
+
+    log.info(f"Running {func.__name__}...")
+    func()
+
+
 if __name__ == "__main__":
-    print (listplayers())
+    print(listplayers())
     '''
     import paramiko
 
