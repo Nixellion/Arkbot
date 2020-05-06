@@ -15,7 +15,7 @@ I looked around and tried different existing control panels for Ark or general s
 
 This is how this Arkbot was born. I will probably rename it at some point, as I found out there's another project with the same name.
 
-Shoutout to projects like Moddodo and (Linux Ark Dedicated Server)[https://github.com/Ekagrah/Linux-Ark-Dedicated-Server] where I did look up some code and logic from, namely checking for game updates and updating mods. Moddodo's code base was taken, updated and integrated into Arkbot.
+Shoutout to projects like Moddodo and [Linux Ark Dedicated Server](https://github.com/Ekagrah/Linux-Ark-Dedicated-Server) where I did look up some code and logic from, namely checking for game updates and updating mods. Moddodo's code base was taken, updated and integrated into Arkbot.
 
 ## Features
 
