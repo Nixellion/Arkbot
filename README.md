@@ -1,6 +1,9 @@
 # Arkbot
 Ark server manager working with LinuxGSM and RCON
 
+## Status
+
+Active development, it works but I would not recommmend it for production use yet. Did not go through any long period of testing yet, still a lot of things are subject to change.
 
 ## Overview
 
