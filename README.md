@@ -21,6 +21,7 @@ Shoutout to projects like Moddodo and (Linux Ark Dedicated Server)[https://githu
 - Chat recorder. It's rudimentary to gamelog parser as it already records chat messages as well, but just in case chat parses simply writes all messages into a simple txt file.
 - Web panel where you can see players online, chat messages, send admin messages into game chat, view game log, dashboard log and perform actions like force update, force mod updates, server restart, host system reboot and the like. Some of these actions can take a custom "Message" which will be displayed in Discord and server alerts.
 - Backup and restore of server's configuration and save files (works but WIP, to be improved)
+- Ingame chat commands. Currently only has /playercount which sends a message saying how many players are currently on the server. Can be expanded easily.
 
 ## Planned features
 
