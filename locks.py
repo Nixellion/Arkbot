@@ -39,10 +39,12 @@ class Lock(object):
             log.warning(f"Lock {self.name} does not exist.")
 
     def lock(self, message=""):
+        log.debug(f"Locking {self.name}...")
         with open(self.filepath, "w+") as f:
             f.write(message)
 
     def unlock(self):
+        log.debug(f"Unlocking {self.name}...")
         if self.locked:
             os.remove(self.filepath)
         else:

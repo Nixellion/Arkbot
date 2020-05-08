@@ -172,6 +172,7 @@ def get_active_mods():
         if line.startswith("ActiveMods"):
             mods_list = line.partition("=")[2].strip().split(",")
             break
+    log.debug(f"Found active mods: {mods_list}")
     if not mods_list:
         return None
     else:
@@ -193,6 +194,7 @@ def check_mod_versions():
     modids_to_update = []
 
     for modid in modids:
+        log.debug(f"Querying info on mod {modid}")
         mod_info_html = requests.get(f"https://steamcommunity.com/sharedfiles/filedetails/?id={modid}").text
         soup = BeautifulSoup(mod_info_html, features="html.parser")
         date_string = soup.find("div", {"id": "mainContents"}).find("div", {"class": "workshopItemPreviewArea"}).find_all(
@@ -205,7 +207,7 @@ def check_mod_versions():
 
         if workshop_updated_date > memory[modid]['last_update']:
             log.debug(f"Update required for mod: {modid}")
-            modids.append(modid)
+            modids_to_update.append(modid)
 
     if len(modids_to_update) > 0:
         log.info(f"Update required for mods: {modids_to_update}")
