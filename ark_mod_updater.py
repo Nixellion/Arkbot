@@ -48,8 +48,6 @@ def mod_updater():
 
 
 
-    if modids:
-        log.info("New mods detected.")
 
 
 
