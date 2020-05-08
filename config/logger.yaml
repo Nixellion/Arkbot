@@ -23,7 +23,7 @@ handlers:
 
 root:
     level: ERROR
-    handlers: [debug_file_handler, console]
+    handlers: [debug_file_handler]
 
 loggers:
   "ark_manager":

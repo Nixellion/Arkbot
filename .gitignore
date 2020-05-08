@@ -133,3 +133,5 @@ gamelog.txt
 chatlog.txt
 *.lock
 test.py
+
+mod_updater_data.yaml
