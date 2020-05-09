@@ -27,7 +27,7 @@ def setup_logging(
         with open(path, 'rt') as f:
             config = yaml.safe_load(f.read())
 
-        for handler, data in config['handlers']:
+        for handler, data in config['handlers'].items():
             if 'filename' in data:
                 logpath = os.path.join(basedir, config['handlers'][handler]['filename'])
                 print("Set log path to", logpath)
