@@ -212,6 +212,8 @@ def check_mod_versions():
             modids_to_update.append(modid)
             mod_name = soup.find("div", {"class": "workshopItemTitle"}).text
             mod_names.append(mod_name)
+            memory[modid]['last_update'] = datetime.now()
+        write_config("mod_updater_data", memory)
 
     if len(modids_to_update) > 0:
         log.info(f"Update required for mods: {modids_to_update}")
