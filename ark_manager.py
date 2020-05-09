@@ -192,6 +192,7 @@ def check_mod_versions():
         write_config("mod_updater_data", memory)
 
     modids_to_update = []
+    mod_names = []
 
     for modid in modids:
         log.debug(f"Querying info on mod {modid}")
@@ -199,6 +200,7 @@ def check_mod_versions():
         soup = BeautifulSoup(mod_info_html, features="html.parser")
         date_string = soup.find("div", {"id": "mainContents"}).find("div", {"class": "workshopItemPreviewArea"}).find_all(
             "div", {"class": "detailsStatRight"})[2].text
+
         try:
             workshop_updated_date =  datetime.strptime(date_string, "%d %b, %Y @ %H:%M%p")
         except ValueError:
@@ -208,13 +210,15 @@ def check_mod_versions():
         if workshop_updated_date > memory[modid]['last_update']:
             log.debug(f"Update required for mod: {modid}")
             modids_to_update.append(modid)
+            mod_name = soup.find("div", {"class": "workshopItemTitle"}).text
+            mod_names.append(mod_name)
 
     if len(modids_to_update) > 0:
         log.info(f"Update required for mods: {modids_to_update}")
-        return modids_to_update
+        return modids_to_update, mod_names
     else:
         log.info("All mods are up to date.")
-        return None
+        return None, None
 
 
 

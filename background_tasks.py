@@ -6,6 +6,7 @@ from gamechat_commands import parse_chat
 from dbo import *
 import functools
 
+from datetime import datetime
 
 
 def catch_errors(f):
@@ -49,3 +50,20 @@ def log_chat():
             f.write(chat_text)
 
         parse_chat(chat)
+
+
+@catch_errors
+def patreon_payout():
+    # Only perform on day 1 of a month
+    if not datetime.now().day == 1:
+        return None
+
+    first_run = False
+
+    if not os.path.exists(PAYOUTS_FILE_PATH):
+        write_config('payouts', {'last_payout_month': datetime.now().month})
+        first_run = True
+
+    payout_data = read_config("payouts")
+    if datetime.now().month != payout_data['last_payout_month'] or first_run:
+        pass

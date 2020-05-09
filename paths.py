@@ -11,6 +11,8 @@ DATABASE_PATH = os.path.join(APP_DIR, "database.db")
 
 CONFIG_FILE_PATH = os.path.join(APP_DIR, "config", "config.yaml")
 
+PAYOUTS_FILE_PATH = os.path.join(APP_DIR, 'config', 'payouts.yaml')
+
 HOME_DIR = r"/home/arkserver"
 
 ARK_SERVER_DIR = os.path.join(HOME_DIR, "serverfiles")

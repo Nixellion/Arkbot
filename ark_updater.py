@@ -32,7 +32,7 @@ def update():
         time.sleep(30 * 60)
         lock.unlock()
     else:
-        log.info("No new versions found.")
+        log.debug("No new versions found.")
         print ("No new versions.")
 
 if __name__ == "__main__":

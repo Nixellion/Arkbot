@@ -17,8 +17,17 @@ handlers:
         formatter: simple
         filename: dashboard.log
         maxBytes: 500000 # 0.5MB
-        backupCount: 5
+        backupCount: 10
         encoding: utf8
+
+    info_file_handler:
+      class: logging.handlers.RotatingFileHandler
+      level: INFO
+      formatter: simple
+      filename: dashboard_info.log
+      maxBytes: 500000 # 0.5MB
+      backupCount: 5
+      encoding: utf8
 
 
 root:
@@ -28,22 +37,22 @@ root:
 loggers:
   "ark_manager":
     level: DEBUG
-    handlers: [debug_file_handler, console]
+    handlers: [debug_file_handler, console, info_file_handler]
   "arkbot":
     level: DEBUG
-    handlers: [debug_file_handler, console]
+    handlers: [debug_file_handler, console, info_file_handler]
   "moddodo":
     level: DEBUG
-    handlers: [debug_file_handler, console]
+    handlers: [debug_file_handler, console, info_file_handler]
   "ark_discord_bot":
       level: DEBUG
-      handlers: [debug_file_handler, console]
+      handlers: [debug_file_handler, console, info_file_handler]
   "ark_dashboard":
       level: DEBUG
-      handlers: [debug_file_handler, console]
+      handlers: [debug_file_handler, console, info_file_handler]
   "ark_updater":
       level: DEBUG
-      handlers: [debug_file_handler, console]
+      handlers: [debug_file_handler, console, info_file_handler]
   "default":
     level: DEBUG
-    handlers: [debug_file_handler, console]
+    handlers: [debug_file_handler, console, info_file_handler]

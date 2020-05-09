@@ -31,11 +31,14 @@ def mod_updater():
     if lock.locked:
         log.debug("Another script already running, exit...")
         sys.exit()
-    modids = check_mod_versions()
+    modids, mod_names = check_mod_versions()
     if modids:
         log.info("New mod version found, performing update.")
         lock.lock("Locked for update...")
-        delay_with_notifications(message="Updating mods.")
+        if len(modids) > 1:
+            delay_with_notifications(message=f"Updating mods: {mod_names}. ")
+        else:
+            delay_with_notifications(message=f"Updating mod: {mod_names}. ")
         stop_server()
         log.info(f"Updating mods: {modids}")
         update_mods(modids)
@@ -44,7 +47,7 @@ def mod_updater():
         time.sleep(10 * 60)
         lock.unlock()
     else:
-        log.info("No new mod version found.")
+        log.debug("No new mod version found.")
 
 
 
