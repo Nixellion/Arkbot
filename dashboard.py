@@ -77,7 +77,7 @@ if __name__ == '__main__':
     app.register_blueprint(api)
 
     try:
-
+        log.info("Dashboard starting at port 1117...")
         socketio.run(app, debug=False, host='0.0.0.0', port=1117)
     except:
         log.error("Unable to start", exc_info=True)
