@@ -208,7 +208,7 @@ def check_mod_versions():
             workshop_updated_date = workshop_updated_date.replace(year=datetime.now().year)
 
         if workshop_updated_date > memory[modid]['last_update']:
-            log.debug(f"Update required for mod: {modid}")
+            log.debug(f"Update required for mod: {modid}; Last updated date: {memory[modid]['last_update']}; Workshop date: {workshop_updated_date}")
             modids_to_update.append(modid)
             mod_name = soup.find("div", {"class": "workshopItemTitle"}).text
             mod_names.append(mod_name)

@@ -32,7 +32,7 @@ def mod_updater():
         log.debug("Another script already running, exit...")
         sys.exit()
     modids, mod_names = check_mod_versions()
-    if modids:
+    if modids != None:
         log.info("New mod version found, performing update.")
         lock.lock("Locked for update...")
         if len(modids) > 1:
