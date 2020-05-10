@@ -70,7 +70,7 @@ class ChatMessage(object):
 def rcon_command(command):
     lock = Lock("warning")
     try:
-
+        log.debug(f"Running RCON command: {command}")
         with MCRcon(server.ip, server.password, port=server.rcon_port) as mcr:
             resp = mcr.command(command)
 
