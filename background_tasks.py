@@ -7,6 +7,7 @@ from dbo import *
 import functools
 
 from datetime import datetime
+import patreon
 
 
 def catch_errors(f):
@@ -56,7 +57,9 @@ def log_chat():
 def patreon_payout():
     # Only perform on day 1 of a month
     if not datetime.now().day == 1:
+        log.debug("Not first day of the month, not paying out patrons.")
         return None
+
 
     first_run = False
 
@@ -66,4 +69,28 @@ def patreon_payout():
 
     payout_data = read_config("payouts")
     if datetime.now().month != payout_data['last_payout_month'] or first_run:
-        pass
+        log.info("Paying out patrons...")
+        api_client = patreon.API(read_config("config")["patreon_token"])
+        pledges = {}
+        users = {}
+        all_data = api_client.fetch_campaign_and_patrons()._all_resource_json_data()
+        for data in all_data:
+            if 'type' in data:
+                if data['type'] == 'pledge':
+                    pledges[data['relationships']['patron']['data']['id']] = data['attributes']
+                elif data['type'] == 'user':
+                    users[data['id']] = data['attributes']
+        user_info = read_config("players")
+        for user_id, pledge in pledges.items():
+            active = pledge['declined_since'] == None
+            log.info(f"{users[user_id]['email']} is paying {pledge['amount_cents'] / 100}$, active is {active}")
+            if user_info[users[user_id]['email']] != None:
+                rcon_command(f"cheat ScriptCommand TCsAR AddArcTotal {user_info[users[user_id]['email']]} {pledge['amount_cents'] / 100}")
+            else:
+                log.warning(f"Tried to payout user with email {users[user_id]['email']} but it does not have SteamID set.")
+                broadcast("There was a problem during payout to one of the patrons, SteamID not set, please contact administrator.", True)
+    else:
+        log.debug("Not paying out patrons because it's the same month as we payed already.")
+
+if __name__ == "__main__":
+    patreon_payout()
