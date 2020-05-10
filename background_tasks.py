@@ -84,11 +84,15 @@ def patreon_payout():
         for user_id, pledge in pledges.items():
             active = pledge['declined_since'] == None
             log.info(f"{users[user_id]['email']} is paying {pledge['amount_cents'] / 100}$, active is {active}")
-            if user_info[users[user_id]['email']] != None:
-                rcon_command(f"ScriptCommand TCsAR AddArcTotal {user_info[users[user_id]['email']]} {pledge['amount_cents'] / 100}")
-            else:
+            if user_info[users[user_id]['email']] == None:
                 log.warning(f"Tried to payout user with email {users[user_id]['email']} but it does not have SteamID set.")
                 broadcast("There was a problem during payout to one of the patrons, SteamID not set, please contact administrator.", True)
+                continue
+            if not active:
+                log.warning(f"User {users[user_id]['email']} canceled subscription. Not paying.")
+                continue
+            rcon_command(f"ScriptCommand TCsAR AddArcTotal {user_info[users[user_id]['email']]} {pledge['amount_cents'] / 100}")
+
     else:
         log.debug("Not paying out patrons because it's the same month as we payed already.")
 
