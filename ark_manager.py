@@ -138,7 +138,7 @@ def listplayers():
 
 def check_version():
     """Check if update to server has been posted"""
-    log.info("Checking for update...")
+    log.debug("Checking for update...")
     ## workaround for conflicting file that can prevent getting the most recent version
     if os.path.isfile("/home/arkserver/Steam/appcache/appinfo.vdf"):
         os.remove("/home/arkserver/Steam/appcache/appinfo.vdf")
@@ -160,7 +160,7 @@ def check_version():
     if int(new_vers) > int(curr_vers):
         return True
     elif int(new_vers) == int(curr_vers):
-        log.info("Server reports up-to-date")
+        log.debug("Server reports up-to-date")
         return False
 
 
