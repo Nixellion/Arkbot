@@ -305,9 +305,13 @@ def reboot_server():
     log.info(str(cmd_out))
 
 
-def broadcast(message, discord=False):
+def broadcast(message, discord=False, cluster=False):
     if discord:
-        discord_message(f"[{server.name}] {message}")
+        if cluster:
+            server_name = "All"
+        else:
+            server_name = server.name
+        discord_message(f"[{server_name}] {message}")
 
     return rcon_command(f'broadcast {message}')
 
