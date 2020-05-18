@@ -31,7 +31,7 @@ def mod_updater():
     if lock.locked:
         log.debug("Another script already running, exit...")
         sys.exit()
-    modids, mod_names = check_mod_versions()
+    modids, mod_names, memory = check_mod_versions()
     if modids != None:
         log.info("New mod version found, performing update.")
         lock.lock("Locked for update...")
@@ -41,11 +41,21 @@ def mod_updater():
             delay_with_notifications(message=f"Updating mod: {mod_names}. ")
         stop_server()
         log.info(f"Updating mods: {modids}")
-        update_mods(modids)
-        fix_mods_permissions()
-        start_server()
-        time.sleep(10 * 60)
-        lock.unlock()
+        try_counter = 0
+        success = False
+        while not success or try_counter < 10:
+            success = update_mods(modids)
+            if not success:
+                log.warning("Mod updates failed. Retrying in a minute.")
+                try_counter += 1
+                time.sleep(60)
+        if success:
+            fix_mods_permissions()
+            start_server()
+            time.sleep(10 * 60)
+            lock.unlock()
+        else:
+            broadcast("Mod update failed after 10 retries. Manual intervention is required. @Nix#8175 notified.", True)
     else:
         log.debug("No new mod version found.")
 
