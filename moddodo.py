@@ -105,10 +105,10 @@ class ModDodo:
         steamapps = STEAMCMD_STEAMAPPS
 
         if os.path.isdir(steamapps):
-            log.info("Trying to remove " + STEAMCMD_STEAMAPPS + " folder...")
+            log.debug("Trying to remove " + STEAMCMD_STEAMAPPS + " folder...")
             try:
                 shutil.rmtree(steamapps)
-                log.info("Success")
+                log.debug("Success")
             except OSError:
                 log.error("Failed to remove " + STEAMCMD_STEAMAPPS + " folder. Usually this does not indicate a problem.\n"
                             + "If this is a TCAdmin Server and you're using the TCAdmin SteamCMD it may prevent mods from updating.")
@@ -159,7 +159,7 @@ class ModDodo:
                         log.debug(f"Remove {src}")
                         os.remove(src)
                         if os.path.isfile(uncompressed):
-                            log.info(f"Also remove {uncompressed}")
+                            log.debug(f"Also remove {uncompressed}")
                             os.remove(uncompressed)
 
             return True
