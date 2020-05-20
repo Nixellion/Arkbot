@@ -15,6 +15,8 @@ import argparse
 parser = argparse.ArgumentParser(description='Restart ark server.')
 parser.add_argument("--message", dest='message', default=None,
                     help="Message to add to broadcast, usually reason for restart.")
+parser.add_argument("--nodelay", dest='nodelay', default=False,
+                    help="Run without delay.")
 args = parser.parse_args()
 
 if args.message:
@@ -23,6 +25,7 @@ if args.message:
         args.message = args.message + ". "
     else:
         args.message = args.message + " "
+
 
 
 def mod_updater():
@@ -35,10 +38,11 @@ def mod_updater():
     if modids != None:
         log.info("New mod version found, performing update.")
         lock.lock("Locked for update...")
-        if len(modids) > 1:
-            delay_with_notifications(message=f"Updating mods: {mod_names}. ")
-        else:
-            delay_with_notifications(message=f"Updating mod: {mod_names}. ")
+        if args.nodelay == False:
+            if len(modids) > 1:
+                delay_with_notifications(message=f"Updating mods: {mod_names}. ")
+            else:
+                delay_with_notifications(message=f"Updating mod: {mod_names}. ")
         stop_server()
         log.info(f"Updating mods: {modids}")
         try_counter = 0
