@@ -47,7 +47,7 @@ def mod_updater():
         log.info(f"Updating mods: {modids}")
         try_counter = 0
         success = False
-        while not success or try_counter >= 10:
+        while not success and try_counter < 10:
             success = update_mods(modids)
             if not success:
                 log.warning("Mod updates failed. Retrying in a minute.")
