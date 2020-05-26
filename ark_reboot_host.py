@@ -42,7 +42,7 @@ if lock.is_locked:
 
 print("Starting...")
 log.info("Admin initialized restart.")
-lock.lock()
+lock.lock("Reboot host")
 broadcast(f"Cluster will reboot in 60 minutes. {args.message}{choice(random_funny_bits)}", True, True)
 time.sleep(30 * 60)
 broadcast(f"Cluster will reboot in 30 minutes. {args.message}{choice(random_funny_bits)}", True, True)

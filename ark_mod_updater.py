@@ -37,7 +37,7 @@ def mod_updater():
     modids, mod_names, memory = check_mod_versions()
     if modids != None:
         log.info("New mod version found, performing update.")
-        lock.lock("Locked for update...")
+        lock.lock("Mod updater.")
         if args.nodelay == False:
             if len(modids) > 1:
                 delay_with_notifications(message=f"Updating mods: {mod_names}. ")

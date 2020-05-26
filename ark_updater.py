@@ -29,7 +29,7 @@ def update():
     if check_version():
         print ("Update found!")
         log.info("New version found, performing update.")
-        lock.lock("Locked for update...")
+        lock.lock("Game updater.")
         run_with_delay(update_server, message="Update detected. ")
         update_server()
         time.sleep(30 * 60)
