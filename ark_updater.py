@@ -2,6 +2,9 @@ import time
 from random import choice
 from ark_manager import *
 
+from debug import get_logger
+log = get_logger("ark_updater")
+
 from locks import Lock
 
 import argparse

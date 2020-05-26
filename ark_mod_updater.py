@@ -8,7 +8,7 @@ from debug import get_logger
 
 from functools import partial
 
-log = get_logger("arkbot")
+log = get_logger("ark_mods_updater")
 
 import argparse
 

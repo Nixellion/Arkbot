@@ -29,7 +29,7 @@ def setup_logging(
 
         for handler, data in config['handlers'].items():
             if 'filename' in data:
-                logpath = os.path.join(basedir, config['handlers'][handler]['filename'])
+                logpath = os.path.join(basedir, "logs", config['handlers'][handler]['filename'])
                 print("Set log path to", logpath)
                 config['handlers'][handler]['filename'] = logpath
 

@@ -5,7 +5,7 @@ from ark_manager import *
 from paths import *
 
 from debug import get_logger
-log = get_logger("arkbot")
+log = get_logger("ark_other_scripts")
 
 from bro_utils import copytree
 

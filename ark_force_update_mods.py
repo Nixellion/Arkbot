@@ -8,7 +8,7 @@ import os, shutil
 from locks import Lock
 
 from debug import get_logger
-log = get_logger("arkbot")
+log = get_logger("ark_mods_updater")
 
 import argparse
 parser = argparse.ArgumentParser(description='Restart ark server.')
