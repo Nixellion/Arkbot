@@ -64,7 +64,7 @@ def catch_errors(f):
             return f(*args, **kwargs)
         except Exception as e:
             traceback.print_exc()
-            log.error(f"Error in function {f.__name__}: {e.message}", exc_info=True)
+            log.error(f"Error in function {f.__name__}: {str(e)}", exc_info=True)
             return None
 
     return wrapped
