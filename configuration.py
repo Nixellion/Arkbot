@@ -33,4 +33,4 @@ def read_config(name):
 def write_config(name, data):
     log.debug(f"Writing config {name}")
     with open(os.path.join(APP_DIR, 'config', f"{name}.yaml"), 'w+', encoding='utf-8') as f:
-        return f.write(yaml.dump(data), default_flow_style=False)
+        return f.write(yaml.dump(data, default_flow_style=False))
