@@ -31,7 +31,7 @@ handlers:
 
     scripts_file_handler:
       class: logging.handlers.RotatingFileHandler
-      level: INFO
+      level: DEBUG
       formatter: simple
       filename: scripts.log
       maxBytes: 500000 # 0.5MB
