@@ -58,6 +58,7 @@ def mod_updater():
             fix_mods_permissions()
             start_server()
             time.sleep(10 * 60)
+            broadcast("Update finished. Server should be up and running by now.", True)
             lock.unlock()
         else:
             broadcast("Mod update failed after 10 retries. Manual intervention is required. @Nix#8175 notified.", True)

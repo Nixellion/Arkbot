@@ -32,7 +32,9 @@ def update():
         lock.lock("Game updater.")
         run_with_delay(update_server, message="Update detected. ")
         update_server()
-        time.sleep(30 * 60)
+        time.sleep(10 * 60)
+        broadcast("Update finished. Server should be up and running by now.", True)
+        time.sleep(20 * 60)
         lock.unlock()
     else:
         log.debug("No new versions found.")
