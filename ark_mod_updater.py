@@ -54,6 +54,7 @@ def mod_updater():
                 try_counter += 1
                 time.sleep(60)
         if success:
+            write_config("mod_updater_data", memory)
             fix_mods_permissions()
             start_server()
             time.sleep(10 * 60)
