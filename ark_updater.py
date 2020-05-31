@@ -42,7 +42,7 @@ def perform_checks(checks=None, auto_update=True):
             if check_response:
                 queue_data['items'].append(check)
                 checks[check_id]['check_response'] = check_response()
-                notification += "{} detected, adding to queue.\n".format(check['update_name'].format(**check_response))
+                notification += "{} detected, adding to queue.\n".format(check['update_name'].format(checks[check_id]['check_response']))
                 detected = True
 
     # Send notification if new update was detected regardless of whether it's first update or not.
