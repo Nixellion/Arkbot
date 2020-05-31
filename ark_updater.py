@@ -18,7 +18,7 @@ from locks import Lock
 
 def perform_checks(checks=None, auto_update=True):
     if not checks:
-        checks = read_config('config')['updater_checks']
+        checks = read_config('updater_config')['updater_checks']
 
     queue = Lock("queue")
     if queue.is_locked:
