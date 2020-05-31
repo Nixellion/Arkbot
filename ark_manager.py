@@ -158,10 +158,10 @@ def check_version():
                 break
 
     if int(new_vers) > int(curr_vers):
-        return True
+        return {"new_vers": new_vers}
     elif int(new_vers) == int(curr_vers):
         log.debug("Server reports up-to-date")
-        return False
+        return None
 
 
 def get_active_mods():
@@ -179,7 +179,14 @@ def get_active_mods():
         return mods_list
 
 @catch_errors
-def check_mod_versions():
+def check_mod_versions(verbose=True):
+    '''
+    Check for mod updates
+
+    :param verbose: In non verbose mode will simply return True or False when it finds first mod to be updated.
+    In verbose mode will output modids_to_update, mod_names, memory, data required for updater function to work.
+    :return:  See above
+    '''
     log.info("Checking for mod updates...")
 
     modids = get_active_mods()
@@ -212,15 +219,19 @@ def check_mod_versions():
             modids_to_update.append(modid)
             mod_name = soup.find("div", {"class": "workshopItemTitle"}).text
             mod_names.append(mod_name)
-            memory[modid]['last_update'] = datetime.now()
+            # memory[modid]['last_update'] = datetime.now()
         #write_config("mod_updater_data", memory)
 
     if len(modids_to_update) > 0:
         log.info(f"Update required for mods: {modids_to_update}")
-        return modids_to_update, mod_names, memory
+        data = {
+            'mod_ids': modids_to_update,
+            'mod_names': mod_names,
+        }
+        return data
     else:
         log.info("All mods are up to date.")
-        return None, None, None
+        return None
 
 
 
@@ -229,17 +240,25 @@ def check_mod_versions():
 import shutil
 
 @catch_errors
-def update_mods(mod_ids):
+def update_mods(mod_ids, **kwargs):
+    success = True
     try:
         ModDodo(os.path.dirname(STEAMCMD),
                 mod_ids,
                 ARK_SERVER_DIR,
                 False,
                 False)
-        return True
     except:
         log.error("Unable to update mods.", exc_info=True)
-        return False
+        success = False
+
+    if success:
+        memory = read_config("mod_updater_data")
+        for modid in mod_ids:
+            memory[modid]['last_update'] = datetime.now()
+        write_config("mod_updater_data", memory)
+
+    return success
 
 
 def fix_permissions(path):
@@ -270,7 +289,7 @@ def check_output(cmd):
     return output
 
 
-def update_server():
+def update_server(*args, **kwargs):
     log.info("Updating...")
     steamcmd = """/home/arkserver/arkserver update"""
     cmd_out = run_shell_command_as_user(steamcmd)

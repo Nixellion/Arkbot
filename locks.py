@@ -50,6 +50,8 @@ class Lock(object):
         else:
             log.debug(f"Lock {self.name} is already unlocked.")
 
+
+
 def get_locks():
     locks = []
     for filename in os.listdir(APP_DIR):
