@@ -1,0 +1,10 @@
+updater_checks:
+  - check_function: check_version
+    actions:
+      - update_server
+    update_name: "Ark Server Update ({new_vers})"
+  - check_function: check_mod_versions
+    actions:
+      - update_mods
+      - fix_mods_permissions
+    update_name: "Ark Mods Update for {mod_names}"
