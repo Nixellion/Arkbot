@@ -38,7 +38,7 @@ def perform_checks(checks=None, auto_update=True):
     detected = False
     for check_id, check in enumerate(checks):
         if check_id not in queue_data['items']:
-            check_response = getattr(am, check)
+            check_response = getattr(am, check['check_function'])
             if check_response:
                 queue_data['items'].append(check)
                 checks[check_id]['check_response'] = check_response
