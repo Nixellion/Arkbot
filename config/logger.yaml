@@ -38,6 +38,15 @@ handlers:
       backupCount: 5
       encoding: utf8
 
+    patreon_file_handler:
+      class: logging.handlers.RotatingFileHandler
+      level: DEBUG
+      formatter: simple
+      filename: patreon.log
+      maxBytes: 500000 # 0.5MB
+      backupCount: 5
+      encoding: utf8
+
 
 root:
     level: ERROR
@@ -71,3 +80,6 @@ loggers:
   "default":
     level: DEBUG
     handlers: [debug_file_handler, console, info_file_handler]
+  "patreon":
+    level: DEBUG
+    handlers: [debug_file_handler, console, patreon_file_handler]

@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     add_background_task(log_chat, 5)
     add_background_task(log_gamelog, 5)
-    add_background_task(patreon_payout, 3600)
+    # add_background_task(patreon_payout, 3600)
 
     from dashboard_views import app as dashboard_views
     from dashboard_api import app as api
