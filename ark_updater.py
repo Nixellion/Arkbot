@@ -40,7 +40,7 @@ def perform_checks(checks=None, auto_update=True):
         if check_id not in queue_data['items']:
             check_response = getattr(am, check['check_function'])()
             if check_response:
-                queue_data['items'].append(check)
+                queue_data['items'][check_id] = check
                 checks[check_id]['check_response'] = check_response
                 log.debug("Adding to queue: {}; {};".format(check['update_name'], checks[check_id]['check_response']))
                 notification += "{} detected, adding to queue.\n".format(check['update_name'].format(**checks[check_id]['check_response']))
@@ -77,7 +77,7 @@ def update(queue, queue_data):
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
     am.stop_server()
 
-    for item_data in queue_data['items']:
+    for item_id, item_data in queue_data['items'].items():
         for action in item_data['actions']:
             try:
                 result = getattr(am, action)(**item_data['check_response'])
