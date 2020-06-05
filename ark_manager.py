@@ -163,6 +163,7 @@ def check_version():
         log.debug("Server reports up-to-date")
         return None
 
+check_update = check_version
 
 def get_active_mods():
     with open(GAMEUSERSETTINGS, "r", encoding="utf8") as f:
