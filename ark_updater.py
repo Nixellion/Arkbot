@@ -25,7 +25,7 @@ def perform_checks(checks=None, auto_update=True):
         queue_data = yaml.load(queue.message)
         first_detection = False
     else:
-        queue_data = {"items": []}
+        queue_data = {"items": {}}
         first_detection = True
 
     notification = ""
