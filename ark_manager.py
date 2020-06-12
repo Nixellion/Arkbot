@@ -156,7 +156,7 @@ def check_version():
             if 'buildid' in line:
                 curr_vers = pattern.search(line).group()
                 break
-
+    log.info(f"Steam game versions - new: {new_vers}; current: {curr_vers}")
     if int(new_vers) > int(curr_vers):
         return {"new_vers": new_vers}
     elif int(new_vers) == int(curr_vers):

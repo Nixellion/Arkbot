@@ -30,7 +30,7 @@ def perform_checks(checks=None, auto_update=True):
 
     notification = ""
     if first_detection:
-        notification += "Restart scheduled ~{} minutes from now.\n".format(RESTART_DELAY)
+        notification += f"Restart scheduled ~{RESTART_DELAY} minutes from now.\n"
 
     # Go through all checks and run functions from arm_manager, storing returned dict values
     # Return values must be dicts that will later be passed down to notification strings and action functions
