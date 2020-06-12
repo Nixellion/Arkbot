@@ -140,8 +140,8 @@ def check_version():
     """Check if update to server has been posted"""
     log.debug("Checking for update...")
     ## workaround for conflicting file that can prevent getting the most recent version
-    if os.path.isfile("/home/arkserver/Steam/appcache/appinfo.vdf"):
-        os.remove("/home/arkserver/Steam/appcache/appinfo.vdf")
+    if os.path.isfile(STEAM_APPCACHE_FILEPATH):
+        os.remove(STEAM_APPCACHE_FILEPATH)
 
     pattern = re.compile(r"[0-9]{7,}")
     ## See if update is available

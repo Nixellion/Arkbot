@@ -21,10 +21,13 @@ ARK_MODS_DIR = os.path.join(ARK_SERVER_DIR, "ShooterGame", "Content", "Mods" )
 
 ARK_SAVED_DIR = os.path.join(HOME_DIR, "serverfiles", "ShooterGame", "Saved")
 
-STEAMCMD = os.path.join(HOME_DIR, ".steam", "steamcmd", "steamcmd.sh")
-STEAMCMD_STEAMAPPS_DIR = os.path.join(HOME_DIR, ".local", "share", "Steam", "steamapps")
-STEAMCMD_MODS_DIR = os.path.join(STEAMCMD_STEAMAPPS_DIR, "workshop", "content", ARK_STEAMID)
 
+
+STEAMCMD = os.path.join(HOME_DIR, ".steam", "steamcmd", "steamcmd.sh")
+STEAMCMD_STEAM_DIR = os.path.join(HOME_DIR, ".local", "share", "Steam")
+STEAMCMD_STEAMAPPS_DIR = os.path.join(STEAMCMD_STEAM_DIR, "steamapps")
+STEAM_APPCACHE_FILEPATH = os.path.join(STEAMCMD_STEAM_DIR, "appinfo.vdf")
+STEAMCMD_MODS_DIR = os.path.join(STEAMCMD_STEAMAPPS_DIR, "workshop", "content", ARK_STEAMID)
 
 log.debug(f"STEAMCMD: {STEAMCMD}")
 
