@@ -1,5 +1,7 @@
 RESTART_DELAY = 60
 CRON_INTERVAL = 10
+import sys
+print ("PYTHON VERSION:"+sys.version)
 
 import time
 from random import choice
