@@ -141,7 +141,10 @@ def check_version():
     log.debug("Checking for update...")
     ## workaround for conflicting file that can prevent getting the most recent version
     if os.path.isfile(STEAM_APPCACHE_FILEPATH):
+        log.debug(f"Remove {STEAM_APPCACHE_FILEPATH}.")
         os.remove(STEAM_APPCACHE_FILEPATH)
+    else:
+        log.debug(f"{STEAM_APPCACHE_FILEPATH} does not exist.")
 
     pattern = re.compile(r"[0-9]{7,}")
     ## See if update is available
