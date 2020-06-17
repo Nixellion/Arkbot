@@ -52,7 +52,7 @@ class GetData():
 
     @property
     def dashlog(self):
-        with open(os.path.join(APP_DIR, "dashboard_info.log"), "r") as f:
+        with open(os.path.join(APP_DIR, "logs", "debug.log"), "r") as f:
             return f.read()
 
     @property

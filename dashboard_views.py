@@ -21,7 +21,7 @@ def gamelog():
     limit = request.args.get("limit", 150)
     return render_template("gamelog.html", limit=limit)
 
-@app.route("/dashlog")
+@app.route("/dashlog/")
 @catch_errors_json
 def dashlog():
     return render_template("dashlog.html")
