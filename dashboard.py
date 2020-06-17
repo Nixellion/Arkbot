@@ -65,10 +65,9 @@ def add_background_task(task, interval):
 
 
 if __name__ == '__main__':
-    from background_tasks import log_chat, log_gamelog, patreon_payout
+    from background_tasks import log_chat, log_gamelog, patreon_payout, log_chat_gamelog_ordered
 
-    add_background_task(log_chat, 5)
-    add_background_task(log_gamelog, 5)
+    add_background_task(log_chat_gamelog_ordered, 10)
     # add_background_task(patreon_payout, 3600)
 
     from dashboard_views import app as dashboard_views

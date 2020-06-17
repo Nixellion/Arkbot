@@ -56,6 +56,12 @@ def log_chat():
 
 
 @catch_errors
+def log_chat_gamelog_ordered():
+    log_chat()
+    time.sleep(1)
+    log_gamelog()
+
+@catch_errors
 def patreon_payout():
     # Only perform on day 1 of a month
     if not datetime.now().day == 1:

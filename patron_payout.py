@@ -73,4 +73,5 @@ def patreon_payout():
     else:
         log.info("Looks like everyone received their payment, exit.")
 
-patreon_payout()
+if __name__ == "__main__":
+    patreon_payout()
