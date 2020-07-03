@@ -28,7 +28,7 @@ def patreon_payout():
     log.info("Checking payout information...")
     payout_emails = []
     for email, info in payout_data.items():
-        if now.month > info['last_payout_month'].month and now > info['last_payout_date']:
+        if now.month > info['last_payout_month'] and now > info['last_payout_date']:
             log.info(f"User {email} added for payout check.")
             payout_emails.append(email)
 
