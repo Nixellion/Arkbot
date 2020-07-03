@@ -62,13 +62,13 @@ def patreon_payout():
             log.info(f"{users[user_id]['email']} is paying {pledge['amount_cents'] / 100}$, active is {active}")
             if users[user_id]['email'].strip() in payout_emails:
                 log.info(f"Paying out user {users[user_id]['email'].strip()}")
-                rcon_command(f"ScriptCommand TCsAR AddArcTotal {user_info[users[user_id]['email']]} {pledge['amount_cents'] / 100}")
+                # rcon_command(f"ScriptCommand TCsAR AddArcTotal {user_info[users[user_id]['email']]} {pledge['amount_cents'] / 100}")
                 log.debug(f"Setting user payout date for {users[user_id]['email']}...")
                 payout_data[users[user_id]['email']]['last_payout_month'] = datetime.now().month
                 payout_data[users[user_id]['email']]['last_payout_date'] = datetime.now()
             else:
-                log.inro (f"NOT paying out user {users[user_id]['email'].strip()} because it was not found in payout_emails - probably already payed.")
-
+                log.info (f"NOT paying out user {users[user_id]['email'].strip()} because it was not found in payout_emails - probably already payed.")
+        write_config('patreon', payout_data)
     else:
         log.info("Looks like everyone received their payment, exit.")
 
