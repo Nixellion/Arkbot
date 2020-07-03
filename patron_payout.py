@@ -21,19 +21,14 @@ log = get_logger("patreon")
 
 def patreon_payout():
     # Only perform on day 1 of a month
-    first_run = False
     now = datetime.now()
 
-    if not os.path.exists(PAYOUTS_FILE_PATH):
-        write_config('payouts', {})
-        first_run = True
-
-    payout_data = read_config("payouts")
+    payout_data = read_config("patreon")
 
     log.info("Checking payout information...")
     payout_emails = []
     for email, info in payout_data.items():
-        if now.month > info['last_payout_month'].month and now > info['last_payout_month']:
+        if now.month > info['last_payout_month'].month and now > info['last_payout_date']:
             log.info(f"User {email} added for payout check.")
             payout_emails.append(email)
 
@@ -65,6 +60,9 @@ def patreon_payout():
             if users[user_id]['email'].strip() in payout_emails:
                 log.info(f"Paying out user {users[user_id]['email'].strip()}")
                 rcon_command(f"ScriptCommand TCsAR AddArcTotal {user_info[users[user_id]['email']]} {pledge['amount_cents'] / 100}")
+                log.debug(f"Setting user payout date for {users[user_id]['email']}...")
+                payout_data[users[user_id]['email']]['last_payout_month'] = datetime.now().month
+                payout_data[users[user_id]['email']]['last_payout_date'] = datetime.now()
             else:
                 log.inro (f"NOT paying out user {users[user_id]['email'].strip()} because it was not found in payout_emails - probably already payed.")
 
