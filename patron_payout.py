@@ -66,8 +66,6 @@ def patreon_payout():
             else:
                 log.inro (f"NOT paying out user {users[user_id]['email'].strip()} because it was not found in payout_emails - probably already payed.")
 
-        else:
-            log.debug("Not paying out patrons because it's the same month as we payed already.")
     else:
         log.info("Looks like everyone received their payment, exit.")
 
