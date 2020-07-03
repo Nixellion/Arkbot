@@ -49,6 +49,9 @@ def patreon_payout():
         user_info = read_config("players")
         for user_id, pledge in pledges.items():
             active = pledge['declined_since'] == None
+            if users[user_id]['email'] not in payout_emails:
+                log.warning(f"User {users[user_id]['email']} already received payout this month. Skip.")
+                continue
             if user_info[users[user_id]['email']] == None:
                 log.warning(f"Tried to payout user with email {users[user_id]['email']} but it does not have SteamID set.")
                 broadcast("There was a problem during payout to one of the patrons, SteamID not set, please contact administrator.", True)
