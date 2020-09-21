@@ -1,8 +1,7 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
-import eventlet
-
-eventlet.monkey_patch()
+from gevent import monkey
+monkey.patch_all()
 
 import os
 
@@ -25,11 +24,7 @@ rp = realPath
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'kdFJDLGh@#@$@$e502983tuj#$g324'
 
-socketio = SocketIO(app, async_mode='eventlet')
-
-
-
-
+socketio = SocketIO(app, async_mode='gevent')
 
 app.jinja_env.filters['html_line_breaks'] = html_line_breaks
 
