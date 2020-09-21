@@ -8,7 +8,7 @@
         <div class="card">
           <h5 class="card-header">Arkbot Commands</h5>
           <div class="card-body">
-              {% for action in [["restart", "Restart"], ["restart", "Update"], ["reboot_host", "Reboot Host"], ["force_update_mods", "Force Update Mods"]] %}
+              {% for action in [["restart", "Restart"], ["restart", "Update"], ["reboot_host", "Reboot Host"], ["force_update_mods", "Force Update Mods"], ["wipe_dinos", "Wipe Wild Dinos"]] %}
               <form action="/api/arkbot_actions/" method="post">
               <div class="input-group mb-3">
                   <input type="text" class="form-control" placeholder="Message, Reason for action" aria-label="Message, Reason for action" aria-describedby="button-addon1" name="message">
