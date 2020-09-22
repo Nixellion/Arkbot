@@ -279,7 +279,7 @@ def fix_permissions(path):
         return False
 
 
-def fix_mods_permissions():
+def fix_mods_permissions(*args, **kwargs):
     fix_permissions(ARK_MODS_DIR)
 
 
