@@ -9,6 +9,7 @@ timeago
 flask
 eventlet
 gevent
+# pip3 install --upgrade greenlet --ignore-installed greenlet
 flask-socketio
 patreon
 gitpython
