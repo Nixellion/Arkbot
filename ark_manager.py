@@ -98,6 +98,8 @@ def getchat():
 def getgamelog():
     return rcon_command('getgamelog')
 
+def destroy_wild_dinos():
+    return rcon_command('destroywilddinos')
 
 def raw_chat_to_messages(chat):
     messages = []

@@ -8,6 +8,7 @@ discord-webhook
 timeago
 flask
 eventlet
+gevent
 flask-socketio
 patreon
 gitpython
