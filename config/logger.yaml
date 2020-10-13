@@ -50,36 +50,36 @@ handlers:
 
 root:
     level: ERROR
-    handlers: [debug_file_handler]
+    handlers: [debug_file_handler, console]
 
 loggers:
   "ark_manager":
     level: DEBUG
-    handlers: [debug_file_handler, console, info_file_handler]
+    handlers: [console, info_file_handler]
   "arkbot":
     level: DEBUG
-    handlers: [debug_file_handler, console, info_file_handler]
+    handlers: [console, info_file_handler]
   "moddodo":
     level: DEBUG
-    handlers: [debug_file_handler, console]
+#    handlers: [console]
   "ark_discord_bot":
       level: DEBUG
-      handlers: [debug_file_handler, console, info_file_handler]
+      handlers: [info_file_handler]
   "ark_dashboard":
       level: DEBUG
-      handlers: [debug_file_handler, console, info_file_handler]
+      handlers: [info_file_handler]
   "ark_updater":
       level: DEBUG
-      handlers: [debug_file_handler, console, scripts_file_handler]
+      handlers: [scripts_file_handler]
   "ark_mods_updater":
       level: DEBUG
-      handlers: [debug_file_handler, console, scripts_file_handler]
+      handlers: [scripts_file_handler]
   "ark_other_scripts":
     level: DEBUG
-    handlers: [debug_file_handler, console, scripts_file_handler, info_file_handler]
+    handlers: [scripts_file_handler, info_file_handler]
   "default":
     level: DEBUG
-    handlers: [debug_file_handler, console, info_file_handler]
+    handlers: [info_file_handler]
   "patreon":
     level: DEBUG
-    handlers: [debug_file_handler, console, patreon_file_handler, info_file_handler]
+    handlers: [patreon_file_handler, info_file_handler]
