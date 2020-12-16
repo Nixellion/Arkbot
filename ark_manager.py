@@ -297,7 +297,9 @@ def check_output(cmd):
 
 def update_server(*args, **kwargs):
     log.info("Updating...")
-    steamcmd = """/home/arkserver/arkserver update"""
+    # steamcmd = """/home/arkserver/arkserver update""" # Had an issue with SteamCMD failing to check new version
+    # while Arkbot was able to detect new version. Force update makes more sense this way.
+    steamcmd = """/home/arkserver/arkserver force-update"""
     cmd_out = run_shell_command_as_user(steamcmd)
     log.info(str(cmd_out))
 
