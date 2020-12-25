@@ -206,12 +206,12 @@ def check_mod_versions(verbose=True):
     if not memory:
         memory = {}
         for modid in modids:
-            memory[modid] = {'last_update': datetime.now()}
+            memory[modid] = {'last_update': datetime(year=1991)}
         # write_config("mod_updater_data", memory)
 
     for modid in modids:
         if modid not in memory:
-            memory[modid] = {'last_update': datetime.now()}
+            memory[modid] = {'last_update': datetime(year=1991)}
     write_config("mod_updater_data", memory)
 
     modids_to_update = []
