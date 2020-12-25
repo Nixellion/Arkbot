@@ -98,8 +98,10 @@ def getchat():
 def getgamelog():
     return rcon_command('getgamelog')
 
+
 def destroy_wild_dinos():
     return rcon_command('destroywilddinos')
+
 
 def raw_chat_to_messages(chat):
     messages = []
@@ -168,7 +170,9 @@ def check_version():
         log.debug("Server reports up-to-date")
         return None
 
+
 check_update = check_version
+
 
 def get_active_mods():
     with open(GAMEUSERSETTINGS, "r", encoding="utf8") as f:
@@ -183,6 +187,7 @@ def get_active_mods():
         return None
     else:
         return mods_list
+
 
 @catch_errors
 def check_mod_versions(verbose=True):
@@ -202,7 +207,12 @@ def check_mod_versions(verbose=True):
         memory = {}
         for modid in modids:
             memory[modid] = {'last_update': datetime.now()}
-        write_config("mod_updater_data", memory)
+        # write_config("mod_updater_data", memory)
+
+    for modid in modids:
+        if modid not in memory:
+            memory[modid] = {'last_update': datetime.now()}
+    write_config("mod_updater_data", memory)
 
     modids_to_update = []
     mod_names = []
@@ -211,22 +221,24 @@ def check_mod_versions(verbose=True):
         log.debug(f"Querying info on mod {modid}")
         mod_info_html = requests.get(f"https://steamcommunity.com/sharedfiles/filedetails/?id={modid}").text
         soup = BeautifulSoup(mod_info_html, features="html.parser")
-        date_string = soup.find("div", {"id": "mainContents"}).find("div", {"class": "workshopItemPreviewArea"}).find_all(
+        date_string = \
+        soup.find("div", {"id": "mainContents"}).find("div", {"class": "workshopItemPreviewArea"}).find_all(
             "div", {"class": "detailsStatRight"})[2].text
 
         try:
-            workshop_updated_date =  datetime.strptime(date_string, "%d %b, %Y @ %H:%M%p")
+            workshop_updated_date = datetime.strptime(date_string, "%d %b, %Y @ %H:%M%p")
         except ValueError:
             workshop_updated_date = datetime.strptime(date_string, "%d %b @ %H:%M%p")
             workshop_updated_date = workshop_updated_date.replace(year=datetime.now().year)
 
         if workshop_updated_date > memory[modid]['last_update']:
-            log.debug(f"Update required for mod: {modid}; Last updated date: {memory[modid]['last_update']}; Workshop date: {workshop_updated_date}")
+            log.debug(
+                f"Update required for mod: {modid}; Last updated date: {memory[modid]['last_update']}; Workshop date: {workshop_updated_date}")
             modids_to_update.append(modid)
             mod_name = soup.find("div", {"class": "workshopItemTitle"}).text
             mod_names.append(mod_name)
             # memory[modid]['last_update'] = datetime.now()
-        #write_config("mod_updater_data", memory)
+        # write_config("mod_updater_data", memory)
 
     if len(modids_to_update) > 0:
         log.info(f"Update required for mods: {modids_to_update}")
@@ -240,10 +252,8 @@ def check_mod_versions(verbose=True):
         return None
 
 
-
-
-
 import shutil
+
 
 @catch_errors
 def update_mods(mod_ids, **kwargs):
@@ -372,8 +382,10 @@ def run_with_lock(func, lock_name="general", message=""):
     log.debug(f"{func.__name__} finished. Removing lock.")
     lock.unlock()
 
+
 from random import choice
 import time
+
 
 def delay_with_notifications(delay_minutes=(30, 15, 10, 5), message=""):
     log.debug(f"delay_with_notifications: {delay_minutes}; {message}")
@@ -387,6 +399,7 @@ def delay_with_notifications(delay_minutes=(30, 15, 10, 5), message=""):
 
     for i in range(1, 10):
         broadcast(f"Restart in {10 - i}...")
+
 
 def run_with_delay(func, delay_minutes=(30, 15, 10, 5), message=""):
     log.info(f"Running {func.__name__} with delay: {delay_minutes}")
