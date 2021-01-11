@@ -48,6 +48,10 @@ BACKUPS_DAILY_ZIP = os.path.join(BACKUPS_DIR, "daily.zip")
 
 KNOWN_MAPS = ["TheIsland", "Genesis", "Aberration_P", "Extinction", "ScorchedEarth_P"]
 
+for dirpath in [DOWNLOADS_DIR, BACKUPS_DIR]:
+    if not os.path.exists(dirpath):
+        os.makedirs(dirpath)
+
 BACKUP_FILES = [
     CONFIG_FILE_PATH,
     DATABASE_PATH,
