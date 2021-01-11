@@ -307,7 +307,7 @@ def backup_savegames():
         with zipfile.ZipFile(BACKUPS_DAILY_ZIP, 'r') as f:
             for fn in f.namelist():
                 existing_files.append(os.path.normpath(fn))
-            log.debug(existing_files)
+            # log.debug(existing_files)
     zipf = zipfile.ZipFile(BACKUPS_DAILY_ZIP, 'a', zipfile.ZIP_LZMA)
     log.debug(f"ZIPFILE: {BACKUPS_DAILY_ZIP}")
     # sys.exit()
