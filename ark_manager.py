@@ -308,7 +308,7 @@ def backup_savegames():
             for fn in f.namelist():
                 existing_files.append(os.path.normpath(fn))
             log.debug(existing_files)
-    zipf = zipfile.ZipFile(BACKUPS_DAILY_ZIP, 'a', zipfile.ZIP_DEFLATED)
+    zipf = zipfile.ZipFile(BACKUPS_DAILY_ZIP, 'a', zipfile.ZIP_LZMA)
     log.debug(f"ZIPFILE: {BACKUPS_DAILY_ZIP}")
     # sys.exit()
     for root, dirs, files in os.walk(ARK_SAVED_DIR, topdown=False):
@@ -320,7 +320,7 @@ def backup_savegames():
                 # print(f"{relative_path}; {relative_path not in existing_files}")
                 if relative_path not in existing_files:
                     log.debug(f"Zipping {filepath} as {relative_path}...")
-                    # zipf.write(filepath, relative_path)
+                    zipf.write(filepath, relative_path)
     zipf.close()
 
 
