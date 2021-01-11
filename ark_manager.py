@@ -300,7 +300,7 @@ import zipfile
 
 
 def backup_savegames():
-    log.debug("Backing up savegames...")
+    log.debug(f"Backing up savegames: {ARK_SAVED_DIR} to {BACKUPS_DAILY_ZIP}")
     save_exts = ['.ark', '.arktribe', '.tribebak', '.arkprofile', '.profilebak', '.arktributetribe']
     existing_files = []
     if os.path.exists(BACKUPS_DAILY_ZIP):
