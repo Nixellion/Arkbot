@@ -134,5 +134,10 @@ if __name__ == "__main__":
     if general.is_locked:
         sys.exit()
 
-    background_tasks()
+    background = Lock("background_tasks")
+    if not background.is_locked:
+        background.lock()
+        background_tasks()
+        background.unlock()
+
     perform_checks()
