@@ -64,6 +64,13 @@ def perform_checks(checks=None, auto_update=True):
             if auto_update:
                 update(queue, queue_data)
 
+def background_tasks():
+    tasks = read_config('updater_config')['background_tasks']
+    for task in tasks:
+        try:
+            getattr(am, task)()
+        except Exception as e:
+            am.discord_message(f"Background task failed: {task}; {e}")
 
 def update(queue, queue_data):
     general = Lock()
@@ -127,4 +134,5 @@ if __name__ == "__main__":
     if general.is_locked:
         sys.exit()
 
+    background_tasks()
     perform_checks()

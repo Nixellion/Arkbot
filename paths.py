@@ -44,6 +44,7 @@ LGSM_CONFIG_DIR = os.path.join(HOME_DIR, "lgsm", "config-lgsm", "arkserver")
 STANDARD_MODS = ["111111111", "Ragnarok", "TheCenter", "Valguero"]
 
 BACKUPS_DIR = os.path.join(APP_DIR, "backups")
+BACKUPS_DAILY_ZIP = os.path.join(BACKUPS_DIR, "daily.zip")
 
 KNOWN_MAPS = ["TheIsland", "Genesis", "Aberration_P", "Extinction", "ScorchedEarth_P"]
 

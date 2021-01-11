@@ -222,8 +222,8 @@ def check_mod_versions(verbose=True):
         mod_info_html = requests.get(f"https://steamcommunity.com/sharedfiles/filedetails/?id={modid}").text
         soup = BeautifulSoup(mod_info_html, features="html.parser")
         date_string = \
-        soup.find("div", {"id": "mainContents"}).find("div", {"class": "workshopItemPreviewArea"}).find_all(
-            "div", {"class": "detailsStatRight"})[2].text
+            soup.find("div", {"id": "mainContents"}).find("div", {"class": "workshopItemPreviewArea"}).find_all(
+                "div", {"class": "detailsStatRight"})[2].text
 
         try:
             workshop_updated_date = datetime.strptime(date_string, "%d %b, %Y @ %H:%M%p")
@@ -294,6 +294,34 @@ def fix_permissions(path):
 def fix_mods_permissions(*args, **kwargs):
     fix_permissions(ARK_MODS_DIR)
     fix_permissions(ARK_CONFIGS_DIR)
+
+
+import zipfile
+
+
+def backup_savegames():
+    log.debug("Backing up savegames...")
+    save_exts = ['.ark', '.arktribe', '.tribebak', '.arkprofile', '.profilebak', '.arktributetribe']
+    existing_files = []
+    if os.path.exists(BACKUPS_DAILY_ZIP):
+        with zipfile.ZipFile(BACKUPS_DAILY_ZIP, 'r') as f:
+            for fn in f.namelist():
+                existing_files.append(os.path.normpath(fn))
+            log.debug(existing_files)
+    zipf = zipfile.ZipFile(BACKUPS_DAILY_ZIP, 'a', zipfile.ZIP_DEFLATED)
+    log.debug(f"ZIPFILE: {BACKUPS_DAILY_ZIP}")
+    # sys.exit()
+    for root, dirs, files in os.walk(ARK_SAVED_DIR, topdown=False):
+        for filename in files:
+            name, ext = os.path.splitext(filename)
+            if ext.lower() in save_exts:
+                filepath = os.path.join(root, filename)
+                relative_path = os.path.normpath(os.path.relpath(filepath, os.path.join(ARK_SAVED_DIR, '..')))
+                # print(f"{relative_path}; {relative_path not in existing_files}")
+                if relative_path not in existing_files:
+                    log.debug(f"Zipping {filepath} as {relative_path}...")
+                    # zipf.write(filepath, relative_path)
+    zipf.close()
 
 
 def check_output(cmd):
