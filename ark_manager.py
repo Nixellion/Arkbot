@@ -323,6 +323,17 @@ def backup_savegames():
                     zipf.write(filepath, relative_path)
     zipf.close()
 
+def health_check_diskspace():
+    lock = Lock("DiskSpace")
+    total, used, free = shutil.disk_usage("/")
+    free_mb = free / 1024 / 1024
+    if free_mb < 100 and not lock.locked:
+        discord_message(f"[{server.name}] Free disk space is running low. {free_mb}MB is available.")
+        lock.lock()
+    else:
+        if lock.locked:
+            discord_message(f"[{server.name}] Disk space issue was fixed. {free_mb}MB is now available.")
+            lock.unlock()
 
 def check_output(cmd):
     log.debug(f"Running shell command raw: {cmd}")
