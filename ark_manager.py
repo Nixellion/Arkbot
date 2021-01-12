@@ -327,6 +327,7 @@ def health_check_diskspace():
     lock = Lock("DiskSpace")
     total, used, free = shutil.disk_usage("/")
     free_mb = free / 1024 / 1024
+    log.debug(f"[Healthcheck] Free disk space: {free_mb}MB")
     if free_mb < 100 and not lock.locked:
         discord_message(f"[{server.name}] Free disk space is running low. {free_mb}MB is available.")
         lock.lock()
