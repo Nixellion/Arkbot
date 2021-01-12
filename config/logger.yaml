@@ -55,10 +55,10 @@ root:
 loggers:
   "ark_manager":
     level: DEBUG
-    handlers: [console, info_file_handler]
+    handlers: [info_file_handler]
   "arkbot":
     level: DEBUG
-    handlers: [console, info_file_handler]
+    handlers: [info_file_handler]
   "moddodo":
     level: DEBUG
 #    handlers: [console]
