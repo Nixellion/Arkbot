@@ -294,6 +294,7 @@ def fix_permissions(path):
 def fix_mods_permissions(*args, **kwargs):
     fix_permissions(ARK_MODS_DIR)
     fix_permissions(ARK_CONFIGS_DIR)
+    fix_permissions(ARK_SAVED_DIR)
 
 
 import zipfile
