@@ -9,5 +9,5 @@ updater_checks:
       - fix_mods_permissions
     update_name: "Ark Mods Update for {mod_names}"
 background_tasks:
-  - backup_savegames
   - health_check_diskspace
+#  - backup_savegames
