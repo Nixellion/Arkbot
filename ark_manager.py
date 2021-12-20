@@ -329,20 +329,20 @@ def health_check_diskspace():
     lock = Lock("DiskSpace")
     total, used, free = shutil.disk_usage("/")
     free_mb = free / 1024 / 1024
-    log.debug(f"[Healthcheck] Free disk space: {free_mb}MB")
+    log.debug(f"[Healthcheck] Free disk space: {str(free_mb).zfill(2)}MB")
 
-    if free_mb < 300:
+    if free_mb < 500:
         if not lock.locked:
-            discord_message(f"[{server.name}] Free disk space is running low. {free_mb}MB is available.")
+            discord_message(f"[{server.name}] Free disk space is running low. {str(free_mb).zfill(2)}MB is available.")
             lock.lock()
             try:
                 os.system('logrotate /etc/logrotate.d/rsyslog')
-                e = ""
+                os.system('rm /var/log/*.1')
             except Exception as e:
                 log.error("Attempted rotating logs: {}".format(e))
     else:
         if lock.locked:
-            discord_message(f"[{server.name}] Disk space issue was fixed. {free_mb}MB is now available.")
+            discord_message(f"[{server.name}] Disk space issue was fixed. {str(free_mb).zfill(2)}MB is now available.")
             lock.unlock()
 
 
